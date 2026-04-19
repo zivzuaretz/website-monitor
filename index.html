@@ -1,423 +1,669 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="robots" content="noindex, nofollow" />
-  <title>מעקב שינויים – אתרי חברות ביטוח והשקעות</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>מבצע תקומת המפקחים | אלטשולר שחם</title>
   <style>
+    :root {
+      --bg:        #080b14;
+      --card:      #0f1324;
+      --card2:     #141829;
+      --border:    #1c2240;
+      --gold:      #f59e0b;
+      --gold-bg:   rgba(245,158,11,0.10);
+      --gold-bdr:  rgba(245,158,11,0.28);
+      --text:      #dde2f5;
+      --muted:     #5a6380;
+      --green:     #22c55e;
+      --red:       #ef4444;
+      --indigo:    #818cf8;
+    }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: 'Segoe UI', Arial, sans-serif;
-      background: #0f1117;
-      color: #e0e0e0;
+      font-family: 'Segoe UI', system-ui, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
       min-height: 100vh;
-      padding: 32px 16px 64px;
+      padding-bottom: 80px;
     }
 
-    header {
+    /* ── BANNER ─────────────────────────────── */
+    .banner {
+      background: linear-gradient(160deg, #0c1230 0%, #10082a 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 40px 24px 32px;
       text-align: center;
-      margin-bottom: 40px;
+      position: relative;
+      overflow: hidden;
     }
-
-    header h1 {
-      font-size: 2rem;
+    .banner::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 50% at 50% -10%, rgba(245,158,11,0.13) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .company-tag {
+      display: inline-block;
+      font-size: 0.72rem;
       font-weight: 700;
-      color: #ffffff;
+      letter-spacing: 1px;
+      color: var(--gold);
+      background: var(--gold-bg);
+      border: 1px solid var(--gold-bdr);
+      border-radius: 999px;
+      padding: 4px 16px;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+    }
+    .banner h1 {
+      font-size: 2.3rem;
+      font-weight: 800;
+      color: #fff;
       letter-spacing: -0.5px;
+      margin-bottom: 6px;
+      position: relative;
     }
-
-    header p.subtitle {
-      color: #888;
-      margin-top: 8px;
-      font-size: 0.95rem;
+    .banner .dept {
+      color: var(--muted);
+      font-size: 0.88rem;
+      margin-bottom: 22px;
     }
-
     .refresh-badge {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      margin-top: 18px;
-      background: #1e2130;
-      border: 1px solid #2a2f45;
-      border-radius: 999px;
-      padding: 8px 20px;
-      font-size: 0.88rem;
-      color: #a0a8c0;
-    }
-
-    .refresh-badge .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #4ade80;
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
-    }
-
-    .stats-bar {
-      display: flex;
-      justify-content: center;
-      gap: 24px;
-      margin-bottom: 40px;
-      flex-wrap: wrap;
-    }
-
-    .stat-card {
-      background: #1a1d2e;
-      border: 1px solid #252840;
-      border-radius: 12px;
-      padding: 18px 32px;
-      text-align: center;
-      min-width: 140px;
-    }
-
-    .stat-card .num {
-      font-size: 2rem;
-      font-weight: 700;
-      color: #fff;
-    }
-
-    .stat-card .label {
       font-size: 0.8rem;
-      color: #666;
-      margin-top: 4px;
-    }
-
-    .stat-card.changed .num { color: #f87171; }
-    .stat-card.ok .num { color: #4ade80; }
-
-    .companies-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-      gap: 24px;
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-
-    .company-card {
-      background: #1a1d2e;
-      border: 1px solid #252840;
-      border-radius: 16px;
-      overflow: hidden;
-    }
-
-    .company-header {
-      padding: 16px 20px;
-      background: #20243a;
-      border-bottom: 1px solid #252840;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .company-name {
-      font-weight: 700;
-      font-size: 1rem;
-      color: #c8d0f0;
-    }
-
-    .company-count {
-      font-size: 0.75rem;
-      color: #555;
-      background: #2a2f4a;
+      color: #6b7a9e;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
       border-radius: 999px;
-      padding: 2px 10px;
+      padding: 7px 18px;
+    }
+    .dot-live {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      flex-shrink: 0;
+      animation: blink 2.5s ease-in-out infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+
+    /* ── MAIN WRAP ───────────────────────────── */
+    .main { max-width: 860px; margin: 0 auto; padding: 32px 16px; }
+
+    .section-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
     }
 
-    .site-list {
-      list-style: none;
-      padding: 8px 0;
+    /* ── GROUP PROGRESS ──────────────────────── */
+    .group-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
     }
-
-    .site-item {
+    .group-top {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      padding: 12px 20px;
-      border-bottom: 1px solid #1e2235;
+      align-items: flex-start;
+      margin-bottom: 18px;
       gap: 12px;
     }
-
-    .site-item:last-child { border-bottom: none; }
-
-    .site-label {
-      font-size: 0.88rem;
-      color: #cdd0e0;
-      flex: 1;
+    .group-title { font-size: 1rem; font-weight: 700; color: #fff; }
+    .group-sub   { font-size: 0.78rem; color: var(--muted); margin-top: 3px; }
+    .group-num   {
+      font-size: 2.2rem; font-weight: 800;
+      color: var(--gold); line-height: 1; text-align: left; white-space: nowrap;
     }
-
-    .site-label a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .site-label a:hover { color: #7b96ff; }
-
-    .status-badge {
-      font-size: 0.75rem;
-      font-weight: 600;
+    .group-num small { font-size: 1rem; color: var(--muted); font-weight: 400; }
+    .track {
+      background: #131829;
       border-radius: 999px;
-      padding: 3px 12px;
-      white-space: nowrap;
-      flex-shrink: 0;
+      height: 13px;
+      overflow: hidden;
     }
-
-    .status-ok {
-      background: #0d2a1a;
-      color: #4ade80;
-      border: 1px solid #166534;
+    .fill {
+      height: 100%; border-radius: 999px;
+      background: linear-gradient(90deg, #d97706, #fbbf24);
+      transition: width 1.2s cubic-bezier(.4,0,.2,1);
+      position: relative; overflow: hidden;
     }
-
-    .status-changed {
-      background: #2a0d0d;
-      color: #f87171;
-      border: 1px solid #7f1d1d;
+    .fill::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,.22) 50%, transparent 100%);
+      animation: shimmer 2s infinite;
     }
-
-    .status-unknown {
-      background: #1e1e1e;
-      color: #666;
-      border: 1px solid #333;
-    }
-
-    .last-change {
+    @keyframes shimmer { 0%{transform:translateX(-100%)} 100%{transform:translateX(100%)} }
+    .track-labels {
+      display: flex;
+      justify-content: space-between;
       font-size: 0.72rem;
-      color: #f87171;
-      margin-top: 2px;
+      color: var(--muted);
+      margin-top: 7px;
     }
 
-    /* Agents leaderboard */
-    .section-title {
-      text-align: center;
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: #c8d0f0;
-      margin: 48px 0 20px;
-      letter-spacing: 0.3px;
+    /* ── PHASE PILLS ─────────────────────────── */
+    .phase-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .phase-pill {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .phase-pill.active {
+      background: var(--gold-bg);
+      border-color: var(--gold-bdr);
+    }
+    .phase-icon { font-size: 1.4rem; flex-shrink: 0; }
+    .phase-name { font-size: 0.9rem; font-weight: 700; color: #fff; }
+    .phase-pill.active .phase-name { color: var(--gold); }
+    .phase-date { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+    .phase-tag {
+      margin-right: auto;
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.5px;
+      border-radius: 999px; padding: 3px 10px;
+    }
+    .phase-tag.active-tag {
+      background: rgba(34,197,94,0.15);
+      color: var(--green);
+      border: 1px solid rgba(34,197,94,0.3);
+    }
+    .phase-tag.soon-tag {
+      background: rgba(90,99,128,0.15);
+      color: var(--muted);
+      border: 1px solid rgba(90,99,128,0.2);
     }
 
-    .agents-table {
-      max-width: 540px;
-      margin: 0 auto;
-      border-collapse: collapse;
-      width: 100%;
-    }
-
-    .agents-table th {
-      background: #20243a;
-      color: #888;
-      font-size: 0.78rem;
-      font-weight: 600;
-      padding: 10px 20px;
-      text-align: right;
-      border-bottom: 1px solid #252840;
-    }
-
-    .agents-table td {
-      padding: 14px 20px;
-      border-bottom: 1px solid #1e2235;
-      font-size: 0.9rem;
-      background: #1a1d2e;
-    }
-
-    .agents-table tr:last-child td { border-bottom: none; }
-
-    .agents-table .rank {
-      color: #555;
-      font-size: 0.8rem;
-      width: 32px;
-    }
-
-    .agents-table .agent-name {
-      color: #e0e4ff;
-      font-weight: 600;
-    }
-
-    .agents-table .points-cell {
-      text-align: center;
-    }
-
-    .points-pill {
-      display: inline-block;
-      background: #1a2a4a;
-      color: #7b96ff;
-      border: 1px solid #2a3f7a;
-      border-radius: 999px;
-      padding: 4px 16px;
-      font-size: 0.85rem;
-      font-weight: 700;
-    }
-
-    .agents-wrapper {
-      background: #1a1d2e;
-      border: 1px solid #252840;
+    /* ── LEADERBOARD ─────────────────────────── */
+    .lb-card {
+      background: var(--card);
+      border: 1px solid var(--border);
       border-radius: 16px;
       overflow: hidden;
-      max-width: 540px;
-      margin: 0 auto;
+      margin-bottom: 20px;
     }
+    .lb-head {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--card2);
+    }
+    .lb-head-title { font-weight: 700; font-size: 1rem; color: #fff; }
+    .lb-head-note  { font-size: 0.72rem; color: var(--muted); }
+
+    /* column grid — direction:ltr so col order stays predictable */
+    .col-hdr, .sup-row {
+      display: grid;
+      grid-template-columns: 36px 1fr 72px 68px 110px 36px;
+      gap: 0;
+      direction: ltr;
+      align-items: center;
+    }
+    .col-hdr {
+      padding: 9px 20px;
+      font-size: 0.67rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+      background: rgba(255,255,255,0.018);
+      text-transform: uppercase;
+    }
+    .col-hdr > *, .sup-row > * { text-align: right; direction: rtl; }
+    .col-hdr .c-pts,  .sup-row .c-pts  { text-align: center; }
+    .col-hdr .c-x2,   .sup-row .c-x2   { text-align: center; }
+    .col-hdr .c-chk,  .sup-row .c-chk  { text-align: center; }
+
+    .league-sep {
+      padding: 8px 20px;
+      font-size: 0.73rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .league-sep.hungry {
+      background: rgba(239,68,68,0.07);
+      color: #ef4444;
+      border-top: 1px solid rgba(239,68,68,0.14);
+      border-bottom: 1px solid rgba(239,68,68,0.14);
+    }
+    .league-sep.warming {
+      background: rgba(245,158,11,0.06);
+      color: var(--gold);
+      border-top: 1px solid rgba(245,158,11,0.14);
+      border-bottom: 1px solid rgba(245,158,11,0.14);
+    }
+    .league-sep .sep-note {
+      font-size: 0.65rem;
+      font-weight: 400;
+      opacity: .55;
+      margin-right: 4px;
+    }
+
+    .sup-row {
+      padding: 13px 20px;
+      border-bottom: 1px solid #0b0e1c;
+      transition: background .12s;
+    }
+    .sup-row:last-child { border-bottom: none; }
+    .sup-row:hover { background: rgba(255,255,255,.022); }
+
+    .c-rank { font-size: 0.88rem; font-weight: 700; color: var(--muted); }
+    .r1 { color: #f59e0b; } .r2 { color: #94a3b8; } .r3 { color: #b87333; }
+
+    .c-name .sup-name { font-size: 0.88rem; font-weight: 600; color: var(--text); }
+    .c-name .sup-team { font-size: 0.7rem; color: var(--muted); margin-top: 2px; }
+
+    .c-pts .pts-val {
+      font-size: 1.1rem; font-weight: 800; color: #fff;
+      display: block; text-align: center;
+    }
+
+    .x2-pill {
+      display: inline-block;
+      font-size: 0.7rem; font-weight: 700;
+      border-radius: 6px; padding: 2px 7px;
+      color: var(--indigo);
+      background: rgba(129,140,248,0.1);
+      border: 1px solid rgba(129,140,248,0.22);
+    }
+    .x2-pill.empty {
+      color: #222840; background: transparent; border-color: #222840;
+    }
+
+    .min-wrap { display: flex; flex-direction: column; gap: 4px; }
+    .min-track { height: 5px; background: #131829; border-radius: 999px; overflow: hidden; }
+    .min-fill {
+      height: 100%; border-radius: 999px;
+      background: var(--green);
+      transition: width 1s ease;
+    }
+    .min-fill.warn { background: var(--gold); }
+    .min-lbl { font-size: 0.63rem; color: var(--muted); }
+
+    .c-chk { font-size: 1rem; text-align: center; }
+
+    /* ── TEAMS ───────────────────────────────── */
+    .teams-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .team-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 22px;
+    }
+    .team-manager  { font-size: 1rem; font-weight: 700; color: #fff; }
+    .team-role     { font-size: 0.73rem; color: var(--muted); margin-bottom: 16px; }
+    .team-pts-big  {
+      font-size: 2.6rem; font-weight: 800;
+      color: var(--gold); line-height: 1;
+    }
+    .team-pts-lbl  { font-size: 0.73rem; color: var(--muted); margin-top: 4px; margin-bottom: 16px; }
+    .member-chips  { display: flex; flex-wrap: wrap; gap: 6px; }
+    .chip {
+      font-size: 0.7rem; color: #8892b0;
+      background: #131829; border-radius: 999px;
+      padding: 3px 10px;
+    }
+
+    /* ── PRIZES ──────────────────────────────── */
+    .prizes-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .prizes-top {
+      padding: 16px 20px;
+      background: var(--card2);
+      border-bottom: 1px solid var(--border);
+      font-weight: 700; font-size: 1rem; color: #fff;
+    }
+    .prizes-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+    .prize-col {
+      padding: 20px;
+      border-right: 1px solid var(--border);
+    }
+    .prize-col:first-child { border-right: none; }
+    .prize-col-title {
+      font-size: 0.73rem; font-weight: 700;
+      letter-spacing: 0.4px; margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .prize-col-title.interim { color: #94a3b8; }
+    .prize-col-title.hungry  { color: var(--red); }
+    .prize-col-title.warming { color: var(--gold); }
+    .prize-item { display: flex; gap: 8px; margin-bottom: 10px; align-items: flex-start; }
+    .p-rank {
+      font-size: 0.68rem; font-weight: 700;
+      border-radius: 5px; padding: 2px 7px;
+      flex-shrink: 0; margin-top: 1px;
+    }
+    .p-rank.g { color: #f59e0b; background: rgba(245,158,11,0.12); }
+    .p-rank.s { color: #94a3b8; background: rgba(148,163,184,0.1); }
+    .p-desc    { font-size: 0.82rem; color: var(--text); line-height: 1.45; }
+    .prize-note { font-size: 0.68rem; color: var(--muted); margin-top: 10px; }
+
+    /* ── RULES ───────────────────────────────── */
+    .rules-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px 24px;
+      margin-bottom: 20px;
+    }
+    .rules-title { font-size: 0.9rem; font-weight: 700; color: #fff; margin-bottom: 14px; }
+    .rules-list  { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .rules-list li {
+      font-size: 0.81rem; color: #8892b0;
+      display: flex; gap: 8px; line-height: 1.55;
+    }
+    .rules-list li::before { content: '›'; color: var(--gold); font-weight: 700; flex-shrink: 0; }
 
     footer {
-      text-align: center;
-      margin-top: 60px;
-      color: #333;
-      font-size: 0.78rem;
+      text-align: center; padding: 0 16px;
+      color: #1e2540; font-size: 0.73rem;
     }
 
-    @media (max-width: 600px) {
-      header h1 { font-size: 1.4rem; }
-      .companies-grid { grid-template-columns: 1fr; }
-      .stats-bar { gap: 12px; }
-      .stat-card { padding: 14px 20px; min-width: 110px; }
+    /* ── RESPONSIVE ──────────────────────────── */
+    @media (max-width: 640px) {
+      .banner h1 { font-size: 1.55rem; }
+      .col-hdr, .sup-row {
+        grid-template-columns: 28px 1fr 52px 52px 80px 28px;
+        padding-right: 12px; padding-left: 12px;
+      }
+      .teams-grid  { grid-template-columns: 1fr; }
+      .prizes-cols { grid-template-columns: 1fr; }
+      .prize-col   { border-right: none; border-bottom: 1px solid var(--border); }
+      .prize-col:last-child { border-bottom: none; }
+      .phase-row   { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
-<header>
-  <h1>📡 מעקב שינויים – אתרי חברות</h1>
-  <p class="subtitle">מעקב אוטומטי אחר עדכונים בדפי חברות ביטוח והשקעות</p>
+<!-- BANNER -->
+<div class="banner">
+  <div class="company-tag">אלטשולר שחם גמל ופנסיה</div>
+  <h1>🏆 מבצע תקומת המפקחים</h1>
+  <p class="dept">מחלקת מפקחים ומכירות סוכנויות</p>
   <div class="refresh-badge">
-    <span class="dot"></span>
-    <span>תאריך רענון נתונים: <strong id="refresh-label">טוען...</strong></span>
-  </div>
-</header>
-
-<div class="stats-bar">
-  <div class="stat-card">
-    <div class="num" id="total-count">—</div>
-    <div class="label">דפים במעקב</div>
-  </div>
-  <div class="stat-card changed">
-    <div class="num" id="changed-count">—</div>
-    <div class="label">שינויים שזוהו</div>
-  </div>
-  <div class="stat-card ok">
-    <div class="num" id="ok-count">—</div>
-    <div class="label">ללא שינוי</div>
+    <span class="dot-live"></span>
+    תאריך רענון נתונים:&nbsp;<strong id="refresh-label">טוען...</strong>
   </div>
 </div>
 
-<div class="companies-grid" id="companies-grid"></div>
+<div class="main">
 
-<div id="agents-section" style="display:none">
-  <div class="section-title">🏆 טבלת נקודות סוכנים</div>
-  <div class="agents-wrapper">
-    <table class="agents-table">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>שם סוכן</th>
-          <th style="text-align:center">נקודות</th>
-        </tr>
-      </thead>
-      <tbody id="agents-tbody"></tbody>
-    </table>
+  <!-- GROUP TARGET -->
+  <div class="section-label">יעד קבוצתי</div>
+  <div class="group-card">
+    <div class="group-top">
+      <div>
+        <div class="group-title">80 תיקים — יעד כולל המחלקה</div>
+        <div class="group-sub">קצבה מזכה + קצבה מוכרת &nbsp;|&nbsp; אפריל – יוני 2025</div>
+      </div>
+      <div class="group-num" id="group-num">0 <small>/ 80</small></div>
+    </div>
+    <div class="track">
+      <div class="fill" id="group-fill" style="width:0%"></div>
+    </div>
+    <div class="track-labels">
+      <span>0</span>
+      <span id="group-pct">0%</span>
+      <span>80 תיקים</span>
+    </div>
   </div>
-</div>
+
+  <!-- PHASES -->
+  <div class="section-label">שלבי המבצע</div>
+  <div class="phase-row" id="phase-row">
+    <!-- JS renders -->
+  </div>
+
+  <!-- LEADERBOARD -->
+  <div class="section-label">דירוג מפקחים</div>
+  <div class="lb-card">
+    <div class="lb-head">
+      <span class="lb-head-title">טבלת דירוג</span>
+      <span class="lb-head-note">נקודה = תיק שהועבר לבדיקה</span>
+    </div>
+    <div class="col-hdr">
+      <span class="c-rank">#</span>
+      <span class="c-name">שם</span>
+      <span class="c-pts">נק׳</span>
+      <span class="c-x2">X2 בונוס</span>
+      <span>מינימום 10</span>
+      <span class="c-chk">✓</span>
+    </div>
+    <div id="lb-body"></div>
+  </div>
+
+  <!-- TEAMS -->
+  <div class="section-label">סיכום לפי צוות</div>
+  <div class="teams-grid" id="teams-grid"></div>
+
+  <!-- PRIZES -->
+  <div class="section-label">פרסים</div>
+  <div class="prizes-card">
+    <div class="prizes-top">🎁 מבנה הפרסים</div>
+    <div class="prizes-cols">
+      <div class="prize-col">
+        <div class="prize-col-title hungry">🔥 ליגת הרעבים — שלב ב׳</div>
+        <div class="prize-item">
+          <span class="p-rank g">1</span>
+          <span class="p-desc">סופ״ש זוגי ברשת ישרוטל</span>
+        </div>
+        <div class="prize-item">
+          <span class="p-rank s">2</span>
+          <span class="p-desc">שובר BuyMe — 2,500 ₪</span>
+        </div>
+        <div class="prize-note">מוענק סיום יוני</div>
+      </div>
+      <div class="prize-col">
+        <div class="prize-col-title warming">🌡️ ליגת המתחממים — שלב ב׳</div>
+        <div class="prize-item">
+          <span class="p-rank g">1</span>
+          <span class="p-desc">שובר BuyMe — 1,500 ₪</span>
+        </div>
+        <div class="prize-note">מוענק סיום יוני</div>
+      </div>
+      <div class="prize-col">
+        <div class="prize-col-title interim">⭐ פרס ביניים — שלב א׳</div>
+        <div class="prize-item">
+          <span class="p-rank g">1</span>
+          <span class="p-desc">שובר BuyMe — 1,000 ₪</span>
+        </div>
+        <div class="prize-note">מוענק תחילת יוני</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RULES -->
+  <div class="section-label">תנאי המבצע</div>
+  <div class="rules-card">
+    <div class="rules-title">כללים עיקריים</div>
+    <ul class="rules-list">
+      <li>המדד הבלעדי: כמות תיקים שהועברו לבדיקה בנושא קצבה מזכה או קצבה מוכרת.</li>
+      <li>שלב א׳ מסתיים 31 מאי — 3 המובילים עולים לליגת הרעבים, השאר לליגת המתחממים.</li>
+      <li>בשלב ב׳ כל מפקח מתחרה אל מול חבריו לליגה בלבד; הדירוג מתאפס.</li>
+      <li>תיק מסוכן חדש (שלא הביא אף תיק קצבה בעבר) שווה X2 נקודות.</li>
+      <li>יעד מינימום: 10 תיקים — מפקח שלא הגיע לסף אינו זכאי לפרסים.</li>
+      <li>יעד קבוצתי: 80 תיקים מכלל המפקחים לאורך כל התקופה.</li>
+      <li>שוויון בנקודות — יוכרע לפי מועד העברת התיק (ראשון מגיע ראשון).</li>
+    </ul>
+  </div>
+
+</div><!-- /main -->
 
 <footer>גישה לדף זה מותרת לבעלי הקישור בלבד &nbsp;·&nbsp; אין להפיץ</footer>
 
 <script>
+  const MIN_TARGET = 10;
+
   async function loadData() {
-    const res = await fetch('data.json?v=' + Date.now());
-    return res.json();
+    const r = await fetch('data.json?v=' + Date.now());
+    return r.json();
   }
 
-  function formatDate(iso) {
-    if (!iso) return null;
+  function fmtDate(iso) {
+    if (!iso) return '—';
     const d = new Date(iso);
-    const parts = new Intl.DateTimeFormat('en-GB', {
+    const p = new Intl.DateTimeFormat('en-GB', {
       timeZone: 'Asia/Jerusalem',
-      day: '2-digit', month: '2-digit', year: 'numeric',
-      hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+      day:'2-digit', month:'2-digit', year:'numeric',
+      hour:'2-digit', minute:'2-digit', second:'2-digit', hour12: false
     }).formatToParts(d);
-    const get = type => parts.find(p => p.type === type)?.value ?? '';
-    return `${get('day')}/${get('month')}/${get('year')} ${get('hour')}:${get('minute')}:${get('second')}`;
+    const g = t => p.find(x => x.type === t)?.value ?? '';
+    return `${g('day')}/${g('month')}/${g('year')} ${g('hour')}:${g('minute')}:${g('second')}`;
   }
 
-  function statusBadge(status) {
-    if (!status || status === 'ללא שינוי') {
-      return `<span class="status-badge status-ok">ללא שינוי</span>`;
-    }
-    if (status === 'שינוי זוהה') {
-      return `<span class="status-badge status-changed">שינוי זוהה !</span>`;
-    }
-    return `<span class="status-badge status-unknown">${status}</span>`;
-  }
+  function clamp(v, lo, hi) { return Math.min(hi, Math.max(lo, v)); }
 
   async function render() {
     const data = await loadData();
+    const phase   = data.phase || 1;
+    const target  = data.group_target || 80;
+    const sups    = [...data.supervisors].sort((a, b) => b.points - a.points);
+    const total   = sups.reduce((s, x) => s + (x.points || 0), 0);
 
-    // Refresh date
-    document.getElementById('refresh-label').textContent = formatDate(data.refresh_date) || '—';
+    /* refresh date */
+    document.getElementById('refresh-label').textContent = fmtDate(data.refresh_date);
 
-    // Stats
-    const total = data.sites.length;
-    const changed = data.sites.filter(s => s.status === 'שינוי זוהה').length;
-    const ok = data.sites.filter(s => !s.status || s.status === 'ללא שינוי').length;
-    document.getElementById('total-count').textContent = total;
-    document.getElementById('changed-count').textContent = changed;
-    document.getElementById('ok-count').textContent = ok;
+    /* group progress */
+    const pct = clamp(Math.round(total / target * 100), 0, 100);
+    document.getElementById('group-num').innerHTML = `${total} <small>/ ${target}</small>`;
+    document.getElementById('group-fill').style.width = pct + '%';
+    document.getElementById('group-pct').textContent = pct + '%';
 
-    // Group by company
-    const grouped = {};
-    for (const site of data.sites) {
-      if (!grouped[site.company]) grouped[site.company] = [];
-      grouped[site.company].push(site);
-    }
-
-    const grid = document.getElementById('companies-grid');
-    grid.innerHTML = '';
-
-    for (const [company, sites] of Object.entries(grouped)) {
-      const card = document.createElement('div');
-      card.className = 'company-card';
-
-      const items = sites.map(s => `
-        <li class="site-item">
-          <div class="site-label">
-            <a href="${s.url}" target="_blank" rel="noopener">${s.label}</a>
-            ${s.last_change ? `<div class="last-change">שינוי אחרון: ${formatDate(s.last_change)}</div>` : ''}
-          </div>
-          ${statusBadge(s.status)}
-        </li>
-      `).join('');
-
-      card.innerHTML = `
-        <div class="company-header">
-          <span class="company-name">${company}</span>
-          <span class="company-count">${sites.length} דפים</span>
+    /* phase pills */
+    document.getElementById('phase-row').innerHTML = `
+      <div class="phase-pill ${phase === 1 ? 'active' : ''}">
+        <span class="phase-icon">📋</span>
+        <div>
+          <div class="phase-name">שלב א׳ — כולל</div>
+          <div class="phase-date">אפריל – 31 מאי 2025</div>
         </div>
-        <ul class="site-list">${items}</ul>
-      `;
-      grid.appendChild(card);
-    }
+        <span class="phase-tag ${phase === 1 ? 'active-tag' : 'soon-tag'}">${phase === 1 ? 'פעיל עכשיו' : 'הסתיים'}</span>
+      </div>
+      <div class="phase-pill ${phase === 2 ? 'active' : ''}">
+        <span class="phase-icon">🏅</span>
+        <div>
+          <div class="phase-name">שלב ב׳ — ליגות</div>
+          <div class="phase-date">1 – 30 יוני 2025</div>
+        </div>
+        <span class="phase-tag ${phase === 2 ? 'active-tag' : 'soon-tag'}">${phase === 2 ? 'פעיל עכשיו' : 'בקרוב'}</span>
+      </div>`;
 
-    // Agents leaderboard
-    if (data.agents && data.agents.length) {
-      const sorted = [...data.agents].sort((a, b) => b.points - a.points);
-      const tbody = document.getElementById('agents-tbody');
-      tbody.innerHTML = sorted.map((a, i) => `
-        <tr>
-          <td class="rank">${i + 1}</td>
-          <td class="agent-name">${a.name}</td>
-          <td class="points-cell"><span class="points-pill">${a.points} נק׳</span></td>
-        </tr>
-      `).join('');
-      document.getElementById('agents-section').style.display = 'block';
+    /* leaderboard */
+    const body = document.getElementById('lb-body');
+    body.innerHTML = '';
+    let lastLeague = null;
+
+    sups.forEach((s, i) => {
+      const rank   = i + 1;
+      const pts    = s.points || 0;
+      const x2     = s.x2_count || 0;
+      const minPct = clamp(Math.round(pts / MIN_TARGET * 100), 0, 100);
+      const ok     = pts >= MIN_TARGET;
+
+      /* determine league label for divider */
+      let league = s.league;
+      if (!league) league = rank <= 3 ? 'hungry' : 'warming';
+
+      if (league !== lastLeague) {
+        const note = phase === 1 ? '<span class="sep-note">(לפי דירוג נוכחי)</span>' : '';
+        const div  = document.createElement('div');
+        div.className = `league-sep ${league}`;
+        div.innerHTML  = league === 'hungry'
+          ? `🔥 ליגת הרעבים ${note}`
+          : `🌡️ ליגת המתחממים ${note}`;
+        body.appendChild(div);
+        lastLeague = league;
+      }
+
+      const rankCls = rank === 1 ? 'r1' : rank === 2 ? 'r2' : rank === 3 ? 'r3' : '';
+      const row = document.createElement('div');
+      row.className = 'sup-row';
+      row.innerHTML = `
+        <span class="c-rank ${rankCls}">${rank}</span>
+        <div class="c-name">
+          <div class="sup-name">${s.name}</div>
+          <div class="sup-team">צוות ${s.team}</div>
+        </div>
+        <span class="c-pts"><span class="pts-val">${pts}</span></span>
+        <span class="c-x2">
+          <span class="${x2 > 0 ? 'x2-pill' : 'x2-pill empty'}">+${x2}</span>
+        </span>
+        <div class="min-wrap">
+          <div class="min-track">
+            <div class="min-fill ${minPct < 100 ? 'warn' : ''}" style="width:${minPct}%"></div>
+          </div>
+          <div class="min-lbl">${pts} / ${MIN_TARGET}</div>
+        </div>
+        <span class="c-chk">${ok ? '✅' : ''}</span>`;
+      body.appendChild(row);
+    });
+
+    /* teams */
+    const teams = {};
+    for (const s of data.supervisors) {
+      if (!teams[s.team]) teams[s.team] = { pts: 0, members: [] };
+      teams[s.team].pts += s.points || 0;
+      teams[s.team].members.push(s.name);
     }
+    const managers = data.team_managers || [];
+    document.getElementById('teams-grid').innerHTML =
+      Object.entries(teams).map(([mgr, t]) => {
+        const info = managers.find(m => m.name === mgr) || {};
+        return `
+          <div class="team-card">
+            <div class="team-manager">צוות ${mgr}</div>
+            <div class="team-role">${info.role || ''}</div>
+            <div class="team-pts-big">${t.pts}</div>
+            <div class="team-pts-lbl">נקודות מצטברות</div>
+            <div class="member-chips">
+              ${t.members.map(m => `<span class="chip">${m}</span>`).join('')}
+            </div>
+          </div>`;
+      }).join('');
   }
 
   render().catch(err => {
-    document.getElementById('refresh-label').textContent = 'שגיאה בטעינת נתונים';
     console.error(err);
+    document.getElementById('refresh-label').textContent = 'שגיאה בטעינת נתונים';
   });
 </script>
 </body>
