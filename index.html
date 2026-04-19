@@ -192,6 +192,77 @@
       margin-top: 2px;
     }
 
+    /* Agents leaderboard */
+    .section-title {
+      text-align: center;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #c8d0f0;
+      margin: 48px 0 20px;
+      letter-spacing: 0.3px;
+    }
+
+    .agents-table {
+      max-width: 540px;
+      margin: 0 auto;
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    .agents-table th {
+      background: #20243a;
+      color: #888;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 10px 20px;
+      text-align: right;
+      border-bottom: 1px solid #252840;
+    }
+
+    .agents-table td {
+      padding: 14px 20px;
+      border-bottom: 1px solid #1e2235;
+      font-size: 0.9rem;
+      background: #1a1d2e;
+    }
+
+    .agents-table tr:last-child td { border-bottom: none; }
+
+    .agents-table .rank {
+      color: #555;
+      font-size: 0.8rem;
+      width: 32px;
+    }
+
+    .agents-table .agent-name {
+      color: #e0e4ff;
+      font-weight: 600;
+    }
+
+    .agents-table .points-cell {
+      text-align: center;
+    }
+
+    .points-pill {
+      display: inline-block;
+      background: #1a2a4a;
+      color: #7b96ff;
+      border: 1px solid #2a3f7a;
+      border-radius: 999px;
+      padding: 4px 16px;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .agents-wrapper {
+      background: #1a1d2e;
+      border: 1px solid #252840;
+      border-radius: 16px;
+      overflow: hidden;
+      max-width: 540px;
+      margin: 0 auto;
+    }
+
     footer {
       text-align: center;
       margin-top: 60px;
@@ -235,6 +306,22 @@
 
 <div class="companies-grid" id="companies-grid"></div>
 
+<div id="agents-section" style="display:none">
+  <div class="section-title">🏆 טבלת נקודות סוכנים</div>
+  <div class="agents-wrapper">
+    <table class="agents-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>שם סוכן</th>
+          <th style="text-align:center">נקודות</th>
+        </tr>
+      </thead>
+      <tbody id="agents-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
 <footer>גישה לדף זה מותרת לבעלי הקישור בלבד &nbsp;·&nbsp; אין להפיץ</footer>
 
 <script>
@@ -246,8 +333,13 @@
   function formatDate(iso) {
     if (!iso) return null;
     const d = new Date(iso);
-    const pad = n => String(n).padStart(2, '0');
-    return `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    const parts = new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'Asia/Jerusalem',
+      day: '2-digit', month: '2-digit', year: 'numeric',
+      hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+    }).formatToParts(d);
+    const get = type => parts.find(p => p.type === type)?.value ?? '';
+    return `${get('day')}/${get('month')}/${get('year')} ${get('hour')}:${get('minute')}:${get('second')}`;
   }
 
   function statusBadge(status) {
@@ -306,6 +398,20 @@
         <ul class="site-list">${items}</ul>
       `;
       grid.appendChild(card);
+    }
+
+    // Agents leaderboard
+    if (data.agents && data.agents.length) {
+      const sorted = [...data.agents].sort((a, b) => b.points - a.points);
+      const tbody = document.getElementById('agents-tbody');
+      tbody.innerHTML = sorted.map((a, i) => `
+        <tr>
+          <td class="rank">${i + 1}</td>
+          <td class="agent-name">${a.name}</td>
+          <td class="points-cell"><span class="points-pill">${a.points} נק׳</span></td>
+        </tr>
+      `).join('');
+      document.getElementById('agents-section').style.display = 'block';
     }
   }
 
