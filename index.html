@@ -243,9 +243,8 @@
     /* column grid — direction:ltr so col order stays predictable */
     .col-hdr, .sup-row {
       display: grid;
-      grid-template-columns: 36px 1fr 60px 78px 90px 100px 32px;
+      grid-template-columns: 1fr 36px 60px 90px 100px 32px;
       gap: 0;
-      direction: ltr;
       align-items: center;
     }
     .col-hdr {
@@ -260,15 +259,13 @@
     }
     .col-hdr > *, .sup-row > * { text-align: right; direction: rtl; }
     .col-hdr .c-pts,  .sup-row .c-pts  { text-align: center; }
-    .col-hdr .c-x2,   .sup-row .c-x2   { text-align: center; }
     .col-hdr .c-chk,  .sup-row .c-chk  { text-align: center; }
-    .col-hdr .c-gap,  .sup-row .c-gap  { text-align: center; }
     .col-hdr .c-chg,  .sup-row .c-chg  { text-align: center; }
 
-    /* top-3 row highlights */
-    .sup-row.top-1 { background: rgba(245,158,11,0.07); border-left: 3px solid #f59e0b; }
-    .sup-row.top-2 { background: rgba(148,163,184,0.05); border-left: 3px solid #94a3b8; }
-    .sup-row.top-3 { background: rgba(184,115,51,0.05); border-left: 3px solid #b87333; }
+    /* top-3 row highlights — border on right (RTL start) */
+    .sup-row.top-1 { background: rgba(245,158,11,0.07); border-right: 3px solid #f59e0b; }
+    .sup-row.top-2 { background: rgba(148,163,184,0.05); border-right: 3px solid #94a3b8; }
+    .sup-row.top-3 { background: rgba(184,115,51,0.05); border-right: 3px solid #b87333; }
     .sup-row.top-1:hover { background: rgba(245,158,11,0.11); }
     .sup-row.top-2:hover { background: rgba(148,163,184,0.09); }
     .sup-row.top-3:hover { background: rgba(184,115,51,0.09); }
@@ -567,11 +564,9 @@
     @media (max-width: 640px) {
       .banner h1 { font-size: 1.55rem; }
       .col-hdr, .sup-row {
-        grid-template-columns: 28px 1fr 48px 60px 90px 24px;
+        grid-template-columns: 1fr 28px 48px 70px 80px 24px;
         padding-right: 12px; padding-left: 12px;
       }
-      .col-hdr .c-gap, .sup-row .c-gap,
-      .col-hdr .c-x2,  .sup-row .c-x2  { display: none; }
       .teams-grid  { grid-template-columns: 1fr; }
       .prizes-cols { grid-template-columns: 1fr; }
       .prize-col   { border-right: none; border-bottom: 1px solid var(--border); }
@@ -637,10 +632,9 @@
       <span class="lb-head-note">נקודה = תיק שהועבר לבדיקה</span>
     </div>
     <div class="col-hdr">
-      <span class="c-rank">#</span>
       <span class="c-name">שם</span>
+      <span class="c-rank">#</span>
       <span class="c-pts">נק׳</span>
-      <span class="c-gap">פער</span>
       <span class="c-chg">שינוי</span>
       <span>מינימום 10</span>
       <span class="c-chk">✓</span>
@@ -888,13 +882,6 @@
       const medals      = ['', '🥇', '🥈', '🥉'];
       const rankDisplay = isManager ? '—' : (rank <= 3 ? medals[rank] : rank);
 
-      /* gap from first */
-      const leaderPts = competitors[0]?.points || 0;
-      const gapHtml   = isManager ? '<span class="chg-none">—</span>'
-        : rank === 1
-          ? '<span class="gap-leader">מוביל!</span>'
-          : `<span class="gap-behind">−${leaderPts - pts} נק׳</span>`;
-
       /* rank change */
       const chg = s.rank_change || 0;
       const chgHtml = isManager ? '<span class="chg-none">—</span>'
@@ -905,7 +892,6 @@
       const row = document.createElement('div');
       row.className = 'sup-row' + topCls + (isManager ? ' row-manager' : '');
       row.innerHTML = `
-        <span class="c-rank ${rankCls}">${rankDisplay}</span>
         <div class="c-name">
           ${avatarImg(s.name)}
           <div>
@@ -913,8 +899,8 @@
             <div class="sup-team">צוות ${s.team}</div>
           </div>
         </div>
+        <span class="c-rank ${rankCls}">${rankDisplay}</span>
         <span class="c-pts"><span class="pts-val">${pts}</span></span>
-        <span class="c-gap">${gapHtml}</span>
         <span class="c-chg">${chgHtml}</span>
         ${isManager
           ? `<span style="font-size:0.7rem;color:var(--muted);font-style:italic">לא משתתפת</span>`
