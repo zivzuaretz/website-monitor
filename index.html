@@ -305,6 +305,7 @@
     .min-lbl { font-size: 0.63rem; color: var(--muted); }
 
     .c-chk { font-size: 1rem; text-align: center; }
+    .row-manager { opacity: 0.75; }
 
     /* ── TEAMS ───────────────────────────────── */
     .teams-grid {
@@ -591,33 +592,52 @@
     body.innerHTML = '';
     let lastLeague = null;
 
-    sups.forEach((s, i) => {
-      const rank   = i + 1;
+    /* split: managers (no_prizes) vs competitors */
+    const managers     = sups.filter(s => s.no_prizes);
+    const competitors  = sups.filter(s => !s.no_prizes);
+    const allRows      = [...competitors, ...managers];   // competitors first
+
+    allRows.forEach((s) => {
+      const isManager = !!s.no_prizes;
+      /* rank only among competitors */
+      const rank   = isManager ? null : competitors.indexOf(s) + 1;
       const pts    = s.points || 0;
       const x2     = s.x2_count || 0;
       const minPct = clamp(Math.round(pts / MIN_TARGET * 100), 0, 100);
       const ok     = pts >= MIN_TARGET;
 
-      /* determine league label for divider */
-      let league = s.league;
-      if (!league) league = rank <= 3 ? 'hungry' : 'warming';
-
-      if (league !== lastLeague) {
-        const note = phase === 1 ? '<span class="sep-note">(לפי דירוג נוכחי)</span>' : '';
-        const div  = document.createElement('div');
-        div.className = `league-sep ${league}`;
-        div.innerHTML  = league === 'hungry'
-          ? `🔥 ליגת הרעבים ${note}`
-          : `🌡️ ליגת המתחממים ${note}`;
-        body.appendChild(div);
-        lastLeague = league;
+      /* league dividers — only for competitors */
+      if (!isManager) {
+        let league = s.league;
+        if (!league) league = rank <= 3 ? 'hungry' : 'warming';
+        if (league !== lastLeague) {
+          const note = phase === 1 ? '<span class="sep-note">(לפי דירוג נוכחי)</span>' : '';
+          const div  = document.createElement('div');
+          div.className = `league-sep ${league}`;
+          div.innerHTML  = league === 'hungry'
+            ? `🔥 ליגת הרעבים ${note}`
+            : `🌡️ ליגת המתחממים ${note}`;
+          body.appendChild(div);
+          lastLeague = league;
+        }
+      } else {
+        /* manager divider */
+        if (lastLeague !== 'manager') {
+          const div = document.createElement('div');
+          div.className = 'league-sep';
+          div.style.cssText = 'background:rgba(99,102,241,0.06);color:#818cf8;border-color:rgba(99,102,241,0.15)';
+          div.innerHTML = '👤 מנהלת צוות — נספרת ליעד המחלקתי';
+          body.appendChild(div);
+          lastLeague = 'manager';
+        }
       }
 
       const rankCls = rank === 1 ? 'r1' : rank === 2 ? 'r2' : rank === 3 ? 'r3' : '';
+      const rankDisplay = isManager ? '—' : rank;
       const row = document.createElement('div');
-      row.className = 'sup-row';
+      row.className = 'sup-row' + (isManager ? ' row-manager' : '');
       row.innerHTML = `
-        <span class="c-rank ${rankCls}">${rank}</span>
+        <span class="c-rank ${rankCls}">${rankDisplay}</span>
         <div class="c-name">
           <div class="sup-name">${s.name}</div>
           <div class="sup-team">צוות ${s.team}</div>
@@ -626,13 +646,15 @@
         <span class="c-x2">
           <span class="${x2 > 0 ? 'x2-pill' : 'x2-pill empty'}">+${x2}</span>
         </span>
-        <div class="min-wrap">
-          <div class="min-track">
-            <div class="min-fill ${minPct < 100 ? 'warn' : ''}" style="width:${minPct}%"></div>
-          </div>
-          <div class="min-lbl">${pts} / ${MIN_TARGET}</div>
-        </div>
-        <span class="c-chk">${ok ? '✅' : ''}</span>`;
+        ${isManager
+          ? `<span style="font-size:0.7rem;color:var(--muted);font-style:italic">לא משתתפת</span>`
+          : `<div class="min-wrap">
+              <div class="min-track">
+                <div class="min-fill ${minPct < 100 ? 'warn' : ''}" style="width:${minPct}%"></div>
+              </div>
+              <div class="min-lbl">${pts} / ${MIN_TARGET}</div>
+            </div>`}
+        <span class="c-chk">${isManager ? '' : ok ? '✅' : ''}</span>`;
       body.appendChild(row);
     });
 
