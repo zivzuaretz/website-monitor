@@ -208,7 +208,13 @@
       color: #fff;
     }
     .countdown .cd-label { color: #a0a8c0; font-weight: 400; }
-    .phase-pill:not(.active) .countdown { display: none; }
+    .phase-pill:not(.active) .countdown {
+      opacity: 0.5;
+      border-color: rgba(255,255,255,0.08);
+      background: rgba(0,0,0,0.15);
+      color: var(--muted);
+    }
+    .phase-pill:not(.active) .countdown .cd-num { color: var(--muted); }
     .phase-tag.soon-tag {
       background: rgba(90,99,128,0.15);
       color: var(--muted);
@@ -623,7 +629,7 @@
             <div class="phase-date">1 – 30 יוני 2026</div>
             <div class="countdown">
               <span class="cd-num">${d2}</span>
-              <span class="cd-label">ימים לסגירת שלב ב׳</span>
+              <span class="cd-label">ימים לסגירת שלב ב׳ וסיום המבצע</span>
             </div>
           </div>
           <span class="phase-tag ${phase === 2 ? 'active-tag' : 'soon-tag'}">${phase === 2 ? 'פעיל עכשיו' : 'בקרוב'}</span>
