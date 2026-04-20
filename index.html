@@ -333,8 +333,21 @@
     .c-rank { font-size: 0.88rem; font-weight: 700; color: var(--muted); }
     .r1 { color: #f59e0b; } .r2 { color: #94a3b8; } .r3 { color: #b87333; }
 
+    .c-name { display: flex; align-items: center; gap: 9px; }
     .c-name .sup-name { font-size: 0.88rem; font-weight: 600; color: var(--text); }
     .c-name .sup-team { font-size: 0.7rem; color: var(--muted); margin-top: 2px; }
+    .avatar {
+      width: 34px; height: 34px; border-radius: 50%;
+      object-fit: cover; flex-shrink: 0;
+      border: 2px solid var(--border);
+      background: var(--card2);
+    }
+    .avatar-lg {
+      width: 44px; height: 44px; border-radius: 50%;
+      object-fit: cover; flex-shrink: 0;
+      border: 2px solid var(--border);
+      background: var(--card2);
+    }
 
     .c-pts .pts-val {
       font-size: 1.1rem; font-weight: 800; color: #fff;
@@ -696,6 +709,25 @@
 <script>
   const MIN_TARGET = 10;
 
+  const supervisorImages = {
+    "גל גבאי":          "images/supervisors/gal-gabay.png",
+    "עדי להב":           "images/supervisors/adi-lahav.png",
+    "באנצ׳י בירוק":     "images/supervisors/banchi-birook.png",
+    "אופיר בגיזדה":     "images/supervisors/ofir-begizda.png",
+    "נתיב לוגסי":        "images/supervisors/nativ-logsi.png",
+    "אילן גמליאל":      "images/supervisors/ilan-gamliel.png",
+    "הילה לוי סוויסה":  "images/supervisors/hila-levi-swisah.png",
+    "ילנה דזורוב":       "images/supervisors/yelena-dzurov.png",
+    "זיו זוארץ":         "images/supervisors/ziv-zuaretz.png",
+    "אורון בן חמו":     "images/supervisors/oron-ben-hamo.png"
+  };
+
+  function avatarImg(name, cls = 'avatar') {
+    const src = supervisorImages[name];
+    if (!src) return '';
+    return `<img class="${cls}" src="${src}" alt="${name}" onerror="this.style.visibility='hidden'">`;
+  }
+
   async function loadData() {
     const r = await fetch('data.json?v=' + Date.now());
     return r.json();
@@ -870,8 +902,11 @@
       row.innerHTML = `
         <span class="c-rank ${rankCls}">${rankDisplay}</span>
         <div class="c-name">
-          <div class="sup-name">${s.name}</div>
-          <div class="sup-team">צוות ${s.team}</div>
+          ${avatarImg(s.name)}
+          <div>
+            <div class="sup-name">${s.name}</div>
+            <div class="sup-team">צוות ${s.team}</div>
+          </div>
         </div>
         <span class="c-pts"><span class="pts-val">${pts}</span></span>
         <span class="c-gap">${gapHtml}</span>
@@ -901,8 +936,13 @@
         const info = teamMgrs.find(m => m.name === mgr) || {};
         return `
           <div class="team-card">
-            <div class="team-manager">צוות ${mgr}</div>
-            <div class="team-role">${info.role || ''}</div>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+              ${avatarImg(mgr, 'avatar-lg')}
+              <div>
+                <div class="team-manager">צוות ${mgr}</div>
+                <div class="team-role">${info.role || ''}</div>
+              </div>
+            </div>
             <div class="team-pts-big">${t.pts}</div>
             <div class="team-pts-lbl">נקודות מצטברות</div>
             <div class="member-chips">
