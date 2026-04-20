@@ -665,10 +665,10 @@
       teams[s.team].pts += s.points || 0;
       teams[s.team].members.push(s.name);
     }
-    const managers = data.team_managers || [];
+    const teamMgrs = data.team_managers || [];
     document.getElementById('teams-grid').innerHTML =
       Object.entries(teams).map(([mgr, t]) => {
-        const info = managers.find(m => m.name === mgr) || {};
+        const info = teamMgrs.find(m => m.name === mgr) || {};
         return `
           <div class="team-card">
             <div class="team-manager">צוות ${mgr}</div>
