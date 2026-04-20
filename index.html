@@ -520,6 +520,126 @@
       color: rgba(255,255,255,0.12); font-size: 0.72rem;
     }
 
+    /* ── COUNTDOWN ───────────────────────────── */
+    .countdown-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 8px;
+      font-size: 0.67rem;
+      font-weight: 700;
+      color: var(--gold);
+      background: var(--gold-bg);
+      border: 1px solid var(--gold-bdr);
+      border-radius: 999px;
+      padding: 3px 10px;
+    }
+    .countdown-badge.urgent {
+      color: var(--red);
+      background: rgba(239,68,68,0.08);
+      border-color: rgba(239,68,68,0.22);
+    }
+
+    /* ── TOP-3 ROWS ───────────────────────────── */
+    .sup-row.top-1 { background: rgba(245,166,35,0.055); }
+    .sup-row.top-2 { background: rgba(148,163,184,0.028); }
+    .sup-row.top-3 { background: rgba(176,120,64,0.038); }
+
+    /* ── RANK CHANGE ──────────────────────────── */
+    .rank-badge {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+    .rank-chg {
+      font-size: 0.58rem;
+      font-weight: 700;
+      line-height: 1;
+      white-space: nowrap;
+    }
+    .rank-up   { color: var(--green); }
+    .rank-down { color: var(--red); }
+
+    /* ── GAP FROM FIRST ───────────────────────── */
+    .gap-lbl {
+      display: block;
+      font-size: 0.58rem;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 2px;
+    }
+
+    /* ── MANAGER ROW ──────────────────────────── */
+    .league-sep.mgr-sep {
+      background: rgba(129,140,248,0.05);
+      color: var(--indigo);
+      border-top: 1px solid rgba(129,140,248,0.12);
+      border-bottom: 1px solid rgba(129,140,248,0.12);
+    }
+    .sup-row.is-manager { opacity: 0.65; }
+    .not-competing {
+      font-size: 0.63rem;
+      color: var(--muted);
+      font-style: italic;
+      white-space: nowrap;
+    }
+
+    /* ── WEEKLY LEADERS ───────────────────────── */
+    .weekly-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow), var(--inset);
+    }
+    .weekly-head {
+      padding: 16px 22px;
+      background: var(--card2);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .weekly-head-title { font-weight: 700; font-size: 0.97rem; color: #fff; }
+    .weekly-head-sub   { font-size: 0.70rem; color: var(--muted); }
+    .weekly-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 22px;
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+      transition: background 0.18s var(--ease);
+    }
+    .weekly-item:last-of-type { border-bottom: none; }
+    .weekly-item:hover { background: rgba(255,255,255,0.022); }
+    .weekly-pos {
+      font-size: 1.3rem;
+      width: 32px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .weekly-info { flex: 1; min-width: 0; }
+    .weekly-name { font-size: 0.88rem; font-weight: 600; color: var(--text); }
+    .weekly-stats { display: flex; gap: 12px; margin-top: 4px; flex-wrap: wrap; }
+    .weekly-rise { font-size: 0.72rem; color: var(--green); font-weight: 600; }
+    .weekly-pts  { font-size: 0.72rem; color: var(--gold);  font-weight: 600; }
+    .weekly-footer {
+      padding: 12px 22px;
+      text-align: center;
+      font-size: 0.80rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      font-style: italic;
+    }
+    .weekly-empty {
+      padding: 28px 22px;
+      text-align: center;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
     /* ── RESPONSIVE ──────────────────────────── */
     @media (max-width: 640px) {
       .banner h1 { font-size: 1.55rem; }
@@ -541,7 +661,7 @@
 <div class="banner">
   <div class="company-tag">אלטשולר שחם גמל ופנסיה</div>
   <h1>🏆 מבצע תקומת המפקחים</h1>
-  <p class="dept">מחלקת מפקחים ומכירות סוכנויות</p>
+  <p class="dept">מחלקת מכירות סוכנים וסוכנויות</p>
   <div class="refresh-badge">
     <span class="dot-live"></span>
     תאריך רענון נתונים:&nbsp;<strong id="refresh-label">טוען...</strong>
@@ -555,8 +675,8 @@
   <div class="group-card">
     <div class="group-top">
       <div>
-        <div class="group-title">80 תיקים — יעד כולל המחלקה</div>
-        <div class="group-sub">קצבה מזכה + קצבה מוכרת &nbsp;|&nbsp; אפריל – יוני 2025</div>
+        <div class="group-title">80 תיקים — יעד מחלקתי</div>
+        <div class="group-sub">קצבה מזכה + קצבה מוכרת &nbsp;|&nbsp; אפריל – יוני 2026</div>
       </div>
       <div class="group-num" id="group-num">0 <small>/ 80</small></div>
     </div>
@@ -594,6 +714,17 @@
     <div id="lb-body"></div>
   </div>
 
+  <!-- WEEKLY LEADERS -->
+  <div class="section-label">מובילי השבוע</div>
+  <div class="weekly-card" id="weekly-card">
+    <div class="weekly-head">
+      <span class="weekly-head-title">🔥 מובילי השבוע</span>
+      <span class="weekly-head-sub" id="weekly-period"></span>
+    </div>
+    <div id="weekly-list"></div>
+    <div class="weekly-footer">השבוע הבא — שלך?</div>
+  </div>
+
   <!-- TEAMS -->
   <div class="section-label">סיכום לפי צוות</div>
   <div class="teams-grid" id="teams-grid"></div>
@@ -604,6 +735,14 @@
     <div class="prizes-top">🎁 מבנה הפרסים</div>
     <div class="prizes-cols">
       <div class="prize-col">
+        <div class="prize-col-title interim">⭐ פרס ביניים — שלב א׳</div>
+        <div class="prize-item">
+          <span class="p-rank g">1</span>
+          <span class="p-desc">שובר BuyMe — 1,000 ₪</span>
+        </div>
+        <div class="prize-note">מחושבת זכאות תחילת יוני</div>
+      </div>
+      <div class="prize-col">
         <div class="prize-col-title hungry">🔥 ליגת הרעבים — שלב ב׳</div>
         <div class="prize-item">
           <span class="p-rank g">1</span>
@@ -613,7 +752,7 @@
           <span class="p-rank s">2</span>
           <span class="p-desc">שובר BuyMe — 2,500 ₪</span>
         </div>
-        <div class="prize-note">מוענק סיום יוני</div>
+        <div class="prize-note">מחושבת זכאות בסוף יוני</div>
       </div>
       <div class="prize-col">
         <div class="prize-col-title warming">🌡️ ליגת המתחממים — שלב ב׳</div>
@@ -621,15 +760,7 @@
           <span class="p-rank g">1</span>
           <span class="p-desc">שובר BuyMe — 1,500 ₪</span>
         </div>
-        <div class="prize-note">מוענק סיום יוני</div>
-      </div>
-      <div class="prize-col">
-        <div class="prize-col-title interim">⭐ פרס ביניים — שלב א׳</div>
-        <div class="prize-item">
-          <span class="p-rank g">1</span>
-          <span class="p-desc">שובר BuyMe — 1,000 ₪</span>
-        </div>
-        <div class="prize-note">מוענק תחילת יוני</div>
+        <div class="prize-note">מחושבת זכאות בסוף יוני</div>
       </div>
     </div>
   </div>
@@ -641,11 +772,11 @@
     <ul class="rules-list">
       <li>המדד הבלעדי: כמות תיקים שהועברו לבדיקה בנושא קצבה מזכה או קצבה מוכרת.</li>
       <li>שלב א׳ מסתיים 31 מאי — 3 המובילים עולים לליגת הרעבים, השאר לליגת המתחממים.</li>
-      <li>בשלב ב׳ כל מפקח מתחרה אל מול חבריו לליגה בלבד; הדירוג מתאפס.</li>
+      <li>בשלב ב׳ כל מפקח מתחרה אל מול חבריו לליגה בלבד.</li>
+      <li>בתחילת שלב ב׳ הניקוד אינו מתאפס אלא מצטבר מכל תקופת המבצע.</li>
       <li>תיק מסוכן חדש (שלא הביא אף תיק קצבה בעבר) שווה X2 נקודות.</li>
       <li>יעד מינימום: 10 תיקים — מפקח שלא הגיע לסף אינו זכאי לפרסים.</li>
       <li>יעד קבוצתי: 80 תיקים מכלל המפקחים לאורך כל התקופה.</li>
-      <li>שוויון בנקודות — יוכרע לפי מועד העברת התיק (ראשון מגיע ראשון).</li>
     </ul>
   </div>
 
@@ -654,7 +785,9 @@
 <footer>גישה לדף זה מותרת לבעלי הקישור בלבד &nbsp;·&nbsp; אין להפיץ</footer>
 
 <script>
-  const MIN_TARGET = 10;
+  const MIN_TARGET  = 10;
+  const PHASE1_END  = new Date('2026-05-31T23:59:59+03:00');
+  const PHASE2_END  = new Date('2026-06-30T23:59:59+03:00');
 
   async function loadData() {
     const r = await fetch('data.json?v=' + Date.now());
@@ -673,14 +806,34 @@
     return `${g('day')}/${g('month')}/${g('year')} ${g('hour')}:${g('minute')}:${g('second')}`;
   }
 
+  function fmtDateShort(iso) {
+    if (!iso) return '';
+    return new Date(iso).toLocaleDateString('he-IL', {
+      day: 'numeric', month: 'long', timeZone: 'Asia/Jerusalem'
+    });
+  }
+
+  function daysLeft(end) {
+    return Math.max(0, Math.ceil((end - Date.now()) / 86400000));
+  }
+
   function clamp(v, lo, hi) { return Math.min(hi, Math.max(lo, v)); }
 
   async function render() {
-    const data = await loadData();
+    const data    = await loadData();
     const phase   = data.phase || 1;
     const target  = data.group_target || 80;
-    const sups    = [...data.supervisors].sort((a, b) => b.points - a.points);
-    const total   = sups.reduce((s, x) => s + (x.points || 0), 0);
+    const allSups = data.supervisors || [];
+
+    /* ── split managers vs competing ── */
+    const competing   = allSups.filter(s => !s.is_manager);
+    const mgrSups     = allSups.filter(s =>  s.is_manager);
+    const sorted      = [...competing].sort((a, b) => b.points - a.points);
+    sorted.forEach((s, i) => { s._rank = i + 1; });
+    const firstPts    = sorted[0]?.points || 0;
+
+    /* group total includes manager */
+    const total = allSups.reduce((s, x) => s + (x.points || 0), 0);
 
     /* refresh date */
     document.getElementById('refresh-label').textContent = fmtDate(data.refresh_date);
@@ -691,13 +844,20 @@
     document.getElementById('group-fill').style.width = pct + '%';
     document.getElementById('group-pct').textContent = pct + '%';
 
+    /* ── countdown ── */
+    const endDate = phase === 1 ? PHASE1_END : PHASE2_END;
+    const days    = daysLeft(endDate);
+    const cdLabel = `⏳ נשארו ${days} ימ${days === 1 ? '' : 'ים'} לסגירת שלב ${phase === 1 ? 'א׳' : 'ב׳'}`;
+    const cdClass = days <= 7 ? 'countdown-badge urgent' : 'countdown-badge';
+
     /* phase pills */
     document.getElementById('phase-row').innerHTML = `
       <div class="phase-pill ${phase === 1 ? 'active' : ''}">
         <span class="phase-icon">📋</span>
         <div>
           <div class="phase-name">שלב א׳ — כולל</div>
-          <div class="phase-date">אפריל – 31 מאי 2025</div>
+          <div class="phase-date">אפריל – 31 מאי 2026</div>
+          ${phase === 1 ? `<span class="${cdClass}">${cdLabel}</span>` : ''}
         </div>
         <span class="phase-tag ${phase === 1 ? 'active-tag' : 'soon-tag'}">${phase === 1 ? 'פעיל עכשיו' : 'הסתיים'}</span>
       </div>
@@ -705,48 +865,72 @@
         <span class="phase-icon">🏅</span>
         <div>
           <div class="phase-name">שלב ב׳ — ליגות</div>
-          <div class="phase-date">1 – 30 יוני 2025</div>
+          <div class="phase-date">1 – 30 יוני 2026</div>
+          ${phase === 2 ? `<span class="${cdClass}">${cdLabel}</span>` : ''}
         </div>
         <span class="phase-tag ${phase === 2 ? 'active-tag' : 'soon-tag'}">${phase === 2 ? 'פעיל עכשיו' : 'בקרוב'}</span>
       </div>`;
 
-    /* leaderboard */
+    /* ── leaderboard ── */
     const body = document.getElementById('lb-body');
     body.innerHTML = '';
     let lastLeague = null;
 
-    sups.forEach((s, i) => {
-      const rank   = i + 1;
+    sorted.forEach((s) => {
+      const rank   = s._rank;
       const pts    = s.points || 0;
       const x2     = s.x2_count || 0;
       const minPct = clamp(Math.round(pts / MIN_TARGET * 100), 0, 100);
       const ok     = pts >= MIN_TARGET;
+      const gap    = firstPts - pts;
 
-      /* determine league label for divider */
-      let league = s.league;
-      if (!league) league = rank <= 3 ? 'hungry' : 'warming';
-
+      let league = s.league || (rank <= 3 ? 'hungry' : 'warming');
       if (league !== lastLeague) {
         const note = phase === 1 ? '<span class="sep-note">(לפי דירוג נוכחי)</span>' : '';
         const div  = document.createElement('div');
         div.className = `league-sep ${league}`;
-        div.innerHTML  = league === 'hungry'
+        div.innerHTML = league === 'hungry'
           ? `🔥 ליגת הרעבים ${note}`
           : `🌡️ ליגת המתחממים ${note}`;
         body.appendChild(div);
         lastLeague = league;
       }
 
-      const rankCls = rank === 1 ? 'r1' : rank === 2 ? 'r2' : rank === 3 ? 'r3' : '';
+      /* rank change indicator */
+      let chgHtml = '';
+      if (s.prev_rank != null) {
+        const d = s.prev_rank - rank;
+        if      (d > 0) chgHtml = `<span class="rank-chg rank-up">▲${d}</span>`;
+        else if (d < 0) chgHtml = `<span class="rank-chg rank-down">▼${Math.abs(d)}</span>`;
+      }
+
+      /* gap from first */
+      const gapHtml = rank === 1
+        ? '<span class="gap-lbl">מוביל</span>'
+        : gap > 0 ? `<span class="gap-lbl">-${gap} מ-1</span>` : '';
+
+      /* rising fire */
+      const isRising = s.prev_rank != null && (s.prev_rank - rank) > 0;
+
+      const rankCls  = rank === 1 ? 'r1' : rank === 2 ? 'r2' : rank === 3 ? 'r3' : '';
+      const rowExtra = rank <= 3 ? ` top-${rank}` : '';
       const row = document.createElement('div');
-      row.className = 'sup-row';
+      row.className = `sup-row${rowExtra}`;
       row.innerHTML = `
-        <span class="c-rank ${rankCls}">${rank}</span>
+        <span class="c-rank ${rankCls}">
+          <div class="rank-badge">
+            <span>${rank}</span>
+            ${chgHtml}
+          </div>
+        </span>
         <div class="c-name">
-          <div class="sup-name">${s.name}</div>
+          <div class="sup-name">${s.name}${isRising ? ' 🔥' : ''}</div>
           <div class="sup-team">צוות ${s.team}</div>
         </div>
-        <span class="c-pts"><span class="pts-val">${pts}</span></span>
+        <span class="c-pts">
+          <span class="pts-val">${pts}</span>
+          ${gapHtml}
+        </span>
         <span class="c-x2">
           <span class="${x2 > 0 ? 'x2-pill' : 'x2-pill empty'}">+${x2}</span>
         </span>
@@ -760,9 +944,76 @@
       body.appendChild(row);
     });
 
-    /* teams */
+    /* manager rows at bottom */
+    if (mgrSups.length) {
+      const sep = document.createElement('div');
+      sep.className = 'league-sep mgr-sep';
+      sep.textContent = '👤 מנהלת צוות — תורמת לניקוד הקבוצתי';
+      body.appendChild(sep);
+      mgrSups.forEach(s => {
+        const pts = s.points || 0;
+        const x2  = s.x2_count || 0;
+        const row = document.createElement('div');
+        row.className = 'sup-row is-manager';
+        row.innerHTML = `
+          <span class="c-rank">—</span>
+          <div class="c-name">
+            <div class="sup-name">${s.name}</div>
+            <div class="sup-team">צוות ${s.team}</div>
+          </div>
+          <span class="c-pts"><span class="pts-val">${pts}</span></span>
+          <span class="c-x2"><span class="x2-pill empty">+${x2}</span></span>
+          <div class="min-wrap">
+            <span class="not-competing">לא משתתפת</span>
+          </div>
+          <span class="c-chk"></span>`;
+        body.appendChild(row);
+      });
+    }
+
+    /* ── weekly leaders ── */
+    const periodEl = document.getElementById('weekly-period');
+    const listEl   = document.getElementById('weekly-list');
+    if (data.prev_week_date) {
+      periodEl.textContent = `שינוי מאז ${fmtDateShort(data.prev_week_date)}`;
+    }
+    const withChange = sorted
+      .map(s => ({
+        name:       s.name,
+        weekly_pts: (s.points || 0) - (s.prev_points || 0),
+        rank_change: s.prev_rank != null ? (s.prev_rank - s._rank) : null
+      }))
+      .filter(s => s.weekly_pts > 0 || (s.rank_change != null && s.rank_change > 0))
+      .sort((a, b) => {
+        const ra = a.rank_change ?? -999, rb = b.rank_change ?? -999;
+        return rb !== ra ? rb - ra : b.weekly_pts - a.weekly_pts;
+      })
+      .slice(0, 3);
+
+    if (!withChange.length) {
+      listEl.innerHTML = '<div class="weekly-empty">אין נתוני שינוי שבועי עדיין — יתעדכן עם עדכון הנתונים</div>';
+    } else {
+      const icons = ['🥇','🥈','🥉'];
+      listEl.innerHTML = withChange.map((s, i) => {
+        const riseStr = s.rank_change > 0 ? `עלה ${s.rank_change} מקומות השבוע` : '';
+        const ptsStr  = s.weekly_pts  > 0 ? `+ ${s.weekly_pts} תיקים חדשים` : '';
+        return `
+          <div class="weekly-item">
+            <span class="weekly-pos">${i === 0 ? '🔥' : icons[i]}</span>
+            <div class="weekly-info">
+              <div class="weekly-name">${s.name}</div>
+              <div class="weekly-stats">
+                ${riseStr ? `<span class="weekly-rise">↑ ${riseStr}</span>` : ''}
+                ${ptsStr  ? `<span class="weekly-pts">${ptsStr}</span>`     : ''}
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    /* ── teams ── */
     const teams = {};
-    for (const s of data.supervisors) {
+    for (const s of allSups) {
       if (!teams[s.team]) teams[s.team] = { pts: 0, members: [] };
       teams[s.team].pts += s.points || 0;
       teams[s.team].members.push(s.name);
