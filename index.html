@@ -188,6 +188,27 @@
       color: var(--green);
       border: 1px solid rgba(34,197,94,0.3);
     }
+    .countdown {
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0,0,0,0.2);
+      border: 1px solid rgba(245,158,11,0.2);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 0.8rem;
+      color: var(--gold);
+      font-weight: 600;
+    }
+    .countdown .cd-num {
+      font-size: 1.4rem;
+      font-weight: 800;
+      line-height: 1;
+      color: #fff;
+    }
+    .countdown .cd-label { color: #a0a8c0; font-weight: 400; }
+    .phase-pill:not(.active) .countdown { display: none; }
     .phase-tag.soon-tag {
       background: rgba(90,99,128,0.15);
       color: var(--muted);
@@ -568,24 +589,50 @@
     document.getElementById('group-fill').style.width = pct + '%';
     document.getElementById('group-pct').textContent = pct + '%';
 
-    /* phase pills */
-    document.getElementById('phase-row').innerHTML = `
-      <div class="phase-pill ${phase === 1 ? 'active' : ''}">
-        <span class="phase-icon">📋</span>
-        <div>
-          <div class="phase-name">שלב א׳ — כולל</div>
-          <div class="phase-date">אפריל – 31 מאי 2026</div>
+    /* phase pills + countdown */
+    const PHASE_ENDS = {
+      1: new Date('2026-06-01T00:00:00+03:00'),
+      2: new Date('2026-07-01T00:00:00+03:00')
+    };
+
+    function daysLeft(phaseNum) {
+      const diff = PHASE_ENDS[phaseNum] - new Date();
+      return Math.max(0, Math.ceil(diff / 86400000));
+    }
+
+    function renderPhases() {
+      const d1 = daysLeft(1);
+      const d2 = daysLeft(2);
+      document.getElementById('phase-row').innerHTML = `
+        <div class="phase-pill ${phase === 1 ? 'active' : ''}">
+          <span class="phase-icon">📋</span>
+          <div style="flex:1">
+            <div class="phase-name">שלב א׳ — כולל</div>
+            <div class="phase-date">אפריל – 31 מאי 2026</div>
+            <div class="countdown">
+              <span class="cd-num">${d1}</span>
+              <span class="cd-label">ימים לסגירת שלב א׳</span>
+            </div>
+          </div>
+          <span class="phase-tag ${phase === 1 ? 'active-tag' : 'soon-tag'}">${phase === 1 ? 'פעיל עכשיו' : 'הסתיים'}</span>
         </div>
-        <span class="phase-tag ${phase === 1 ? 'active-tag' : 'soon-tag'}">${phase === 1 ? 'פעיל עכשיו' : 'הסתיים'}</span>
-      </div>
-      <div class="phase-pill ${phase === 2 ? 'active' : ''}">
-        <span class="phase-icon">🏅</span>
-        <div>
-          <div class="phase-name">שלב ב׳ — ליגות</div>
-          <div class="phase-date">1 – 30 יוני 2026</div>
-        </div>
-        <span class="phase-tag ${phase === 2 ? 'active-tag' : 'soon-tag'}">${phase === 2 ? 'פעיל עכשיו' : 'בקרוב'}</span>
-      </div>`;
+        <div class="phase-pill ${phase === 2 ? 'active' : ''}">
+          <span class="phase-icon">🏅</span>
+          <div style="flex:1">
+            <div class="phase-name">שלב ב׳ — ליגות</div>
+            <div class="phase-date">1 – 30 יוני 2026</div>
+            <div class="countdown">
+              <span class="cd-num">${d2}</span>
+              <span class="cd-label">ימים לסגירת שלב ב׳</span>
+            </div>
+          </div>
+          <span class="phase-tag ${phase === 2 ? 'active-tag' : 'soon-tag'}">${phase === 2 ? 'פעיל עכשיו' : 'בקרוב'}</span>
+        </div>`;
+    }
+
+    renderPhases();
+    /* refresh countdown once a minute */
+    setInterval(renderPhases, 60000);
 
     /* leaderboard */
     const body = document.getElementById('lb-body');
