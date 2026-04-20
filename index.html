@@ -366,6 +366,59 @@
     .c-chk { font-size: 1rem; text-align: center; }
     .row-manager { opacity: 0.75; }
 
+    /* ── WEEKLY LEADERS ─────────────────────── */
+    .weekly-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .weekly-head {
+      padding: 14px 20px;
+      background: var(--card2);
+      border-bottom: 1px solid var(--border);
+      font-weight: 700; font-size: 1rem; color: #fff;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .weekly-body { padding: 4px 0; }
+    .weekly-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 13px 20px;
+      border-bottom: 1px solid #0b0e1c;
+    }
+    .weekly-row:last-child { border-bottom: none; }
+    .weekly-pos {
+      font-size: 1.3rem;
+      width: 28px; flex-shrink: 0; text-align: center;
+    }
+    .weekly-name {
+      font-size: 0.92rem; font-weight: 700; color: var(--text); flex: 1;
+    }
+    .weekly-stats { display: flex; flex-direction: column; gap: 3px; align-items: flex-end; }
+    .weekly-rank-chg {
+      font-size: 0.75rem; font-weight: 700; color: var(--green);
+    }
+    .weekly-files {
+      font-size: 0.72rem; color: var(--muted);
+    }
+    .weekly-footer {
+      text-align: center;
+      padding: 13px 20px;
+      font-size: 0.85rem; font-weight: 600;
+      color: var(--gold);
+      background: rgba(245,158,11,0.04);
+      border-top: 1px solid var(--border);
+    }
+    .weekly-empty {
+      padding: 28px 20px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
     /* ── TEAMS ───────────────────────────────── */
     .teams-grid {
       display: grid;
@@ -513,6 +566,14 @@
   <div class="section-label">שלבי המבצע</div>
   <div class="phase-row" id="phase-row">
     <!-- JS renders -->
+  </div>
+
+  <!-- WEEKLY LEADERS -->
+  <div class="section-label">מובילי השבוע</div>
+  <div class="weekly-card">
+    <div class="weekly-head">⚡ מובילי השבוע</div>
+    <div class="weekly-body" id="weekly-body"></div>
+    <div class="weekly-footer">השבוע הבא — שלך? 🎯</div>
   </div>
 
   <!-- LEADERBOARD -->
@@ -673,8 +734,30 @@
     }
 
     renderPhases();
-    /* refresh countdown once a minute */
     setInterval(renderPhases, 60000);
+
+    /* weekly leaders */
+    const weeklyEl = document.getElementById('weekly-body');
+    const ranked   = data.supervisors
+      .filter(s => !s.no_prizes)
+      .filter(s => (s.rank_change || 0) > 0 || (s.weekly_new || 0) > 0)
+      .sort((a, b) => (b.rank_change || 0) - (a.rank_change || 0) || (b.weekly_new || 0) - (a.weekly_new || 0))
+      .slice(0, 3);
+
+    if (ranked.length === 0) {
+      weeklyEl.innerHTML = '<div class="weekly-empty">נתוני השבוע יעודכנו בקרוב ✨</div>';
+    } else {
+      const icons = ['🔥', '⭐', '✨'];
+      weeklyEl.innerHTML = ranked.map((s, i) => `
+        <div class="weekly-row">
+          <span class="weekly-pos">${icons[i]}</span>
+          <span class="weekly-name">${s.name}</span>
+          <div class="weekly-stats">
+            <span class="weekly-rank-chg">עלה ${s.rank_change} מקומות השבוע</span>
+            <span class="weekly-files">+${s.weekly_new} תיקים חדשים</span>
+          </div>
+        </div>`).join('');
+    }
 
     /* leaderboard */
     const body = document.getElementById('lb-body');
