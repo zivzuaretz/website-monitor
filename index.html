@@ -419,6 +419,41 @@
       font-size: 0.85rem;
     }
 
+    /* ── SALES INFO ─────────────────────────── */
+    .sales-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 22px;
+      margin-bottom: 20px;
+    }
+    .sales-title {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 10px;
+      letter-spacing: 0.3px;
+    }
+    .sales-total {
+      font-size: 1.9rem;
+      font-weight: 800;
+      color: #c8d0f0;
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+    .sales-row {
+      font-size: 0.78rem;
+      color: #6b7a9e;
+      margin-bottom: 7px;
+      line-height: 1.6;
+    }
+    .sales-row span { color: #9aa3c0; }
+    .sales-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 10px 0;
+    }
+
     /* ── TEAMS ───────────────────────────────── */
     .teams-grid {
       display: grid;
@@ -635,6 +670,10 @@
     </div>
   </div>
 
+  <!-- SALES INFO -->
+  <div class="section-label">מידע תומך</div>
+  <div class="sales-card" id="sales-card"></div>
+
   <!-- RULES -->
   <div class="section-label">תנאי המבצע</div>
   <div class="rules-card">
@@ -759,6 +798,9 @@
         </div>`).join('');
     }
 
+    /* sales info */
+    renderSales(data.sales);
+
     /* leaderboard */
     const body = document.getElementById('lb-body');
     body.innerHTML = '';
@@ -868,6 +910,34 @@
             </div>
           </div>`;
       }).join('');
+  }
+
+  function fmtM(n) {
+    if (!n) return '—';
+    if (n >= 1000000) return (n / 1000000).toFixed(2).replace(/\.?0+$/, '') + 'M ₪';
+    if (n >= 1000)    return (n / 1000).toFixed(1).replace(/\.?0+$/, '') + 'K ₪';
+    return n.toLocaleString('he-IL') + ' ₪';
+  }
+
+  function renderSales(sales) {
+    const el = document.getElementById('sales-card');
+    if (!sales) { el.style.display = 'none'; return; }
+
+    const byProduct = sales.by_product
+      .map(p => `<span>${p.label} ${fmtM(p.amount)}</span>`)
+      .join('<span style="color:var(--border);margin:0 6px">|</span>');
+
+    const bySup = sales.by_supervisor
+      .filter(s => s.amount > 0)
+      .map(s => `<span>${s.name} ${fmtM(s.amount)}</span>`)
+      .join('<span style="color:var(--border);margin:0 6px">·</span>');
+
+    el.innerHTML = `
+      <div class="sales-title">סה״כ מכירות קצבה מזכה ומוכרת (מידע תומך)</div>
+      <div class="sales-total">${fmtM(sales.total)}</div>
+      <hr class="sales-divider">
+      <div class="sales-row">${byProduct}</div>
+      ${bySup ? `<div class="sales-row" style="margin-top:4px">${bySup}</div>` : ''}`;
   }
 
   render().catch(err => {
