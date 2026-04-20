@@ -2,18 +2,20 @@
   "refresh_date": "2026-04-19T22:10:44+03:00",
   "phase": 1,
   "group_target": 80,
+  "prev_week_date": null,
   "team_managers": [
-    { "name": "זיו זוארץ", "role": "מנהלת צוות" },
+    { "name": "זיו זוארץ",   "role": "מנהלת צוות" },
     { "name": "אורון בן חמו", "role": "מנהל מחלקה" }
   ],
   "supervisors": [
-    { "name": "גל גבאי",         "team": "זיו זוארץ",    "points": 0, "x2_count": 0, "league": null },
-    { "name": "עדי להב",          "team": "זיו זוארץ",    "points": 0, "x2_count": 0, "league": null },
-    { "name": "באנצ׳י בירוק",    "team": "זיו זוארץ",    "points": 0, "x2_count": 0, "league": null },
-    { "name": "אופיר בגיזדה",    "team": "זיו זוארץ",    "points": 0, "x2_count": 0, "league": null },
-    { "name": "נתיב לוגסי",       "team": "זיו זוארץ",    "points": 0, "x2_count": 0, "league": null },
-    { "name": "אילן גמליאל",     "team": "אורון בן חמו", "points": 0, "x2_count": 0, "league": null },
-    { "name": "הילה לוי סוויסה", "team": "אורון בן חמו", "points": 0, "x2_count": 0, "league": null },
-    { "name": "ילנה דזורוב",      "team": "אורון בן חמו", "points": 0, "x2_count": 0, "league": null }
+    { "name": "זיו זוארץ",       "team": "זיו זוארץ",    "points": 0, "x2_count": 0, "league": null, "is_manager": true, "prev_points": 0, "prev_rank": null },
+    { "name": "גל גבאי",         "team": "זיו זוארץ",    "points": 0, "x2_count": 0, "league": null, "prev_points": 0, "prev_rank": null },
+    { "name": "עדי להב",          "team": "זיו זוארץ",    "points": 0, "x2_count": 0, "league": null, "prev_points": 0, "prev_rank": null },
+    { "name": "באנצ׳י בירוק",    "team": "זיו זוארץ",    "points": 0, "x2_count": 0, "league": null, "prev_points": 0, "prev_rank": null },
+    { "name": "אופיר בגיזדה",    "team": "זיו זוארץ",    "points": 0, "x2_count": 0, "league": null, "prev_points": 0, "prev_rank": null },
+    { "name": "נתיב לוגסי",       "team": "זיו זוארץ",    "points": 0, "x2_count": 0, "league": null, "prev_points": 0, "prev_rank": null },
+    { "name": "אילן גמליאל",     "team": "אורון בן חמו", "points": 0, "x2_count": 0, "league": null, "prev_points": 0, "prev_rank": null },
+    { "name": "הילה לוי סוויסה", "team": "אורון בן חמו", "points": 0, "x2_count": 0, "league": null, "prev_points": 0, "prev_rank": null },
+    { "name": "ילנה דזורוב",      "team": "אורון בן חמו", "points": 0, "x2_count": 0, "league": null, "prev_points": 0, "prev_rank": null }
   ]
 }
