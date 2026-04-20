@@ -481,12 +481,17 @@
       padding: 22px;
     }
     .team-manager  { font-size: 1rem; font-weight: 700; color: #fff; }
-    .team-role     { font-size: 0.73rem; color: var(--muted); margin-bottom: 16px; }
+    .team-role     { font-size: 0.73rem; color: var(--muted); }
     .team-pts-big  {
-      font-size: 2.6rem; font-weight: 800;
+      font-size: 2rem; font-weight: 800;
       color: var(--gold); line-height: 1;
     }
-    .team-pts-lbl  { font-size: 0.73rem; color: var(--muted); margin-top: 4px; margin-bottom: 16px; }
+    .team-pts-lbl  { font-size: 0.65rem; color: var(--muted); margin-top: 3px; }
+    .team-top-row  {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
     .member-chips  { display: flex; flex-wrap: wrap; gap: 6px; }
     .chip {
       font-size: 0.7rem; color: #8892b0;
@@ -936,15 +941,19 @@
         const info = teamMgrs.find(m => m.name === mgr) || {};
         return `
           <div class="team-card">
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
-              ${avatarImg(mgr, 'avatar-lg')}
-              <div>
-                <div class="team-manager">צוות ${mgr}</div>
-                <div class="team-role">${info.role || ''}</div>
+            <div class="team-top-row">
+              <div style="display:flex;align-items:center;gap:10px">
+                ${avatarImg(mgr, 'avatar-lg')}
+                <div>
+                  <div class="team-manager">צוות ${mgr}</div>
+                  <div class="team-role">${info.role || ''}</div>
+                </div>
+              </div>
+              <div style="text-align:left">
+                <div class="team-pts-big">${t.pts}</div>
+                <div class="team-pts-lbl">נקודות מצטברות</div>
               </div>
             </div>
-            <div class="team-pts-big">${t.pts}</div>
-            <div class="team-pts-lbl">נקודות מצטברות</div>
             <div class="member-chips">
               ${t.members.map(m => `<span class="chip">${m}</span>`).join('')}
             </div>
