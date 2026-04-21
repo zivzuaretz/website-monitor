@@ -560,6 +560,48 @@
       color: #1e2540; font-size: 0.73rem;
     }
 
+    /* ── MODAL ───────────────────────────────── */
+    #modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(8,11,20,0.82);
+      backdrop-filter: blur(3px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+    #modal-overlay.hidden { display: none; }
+    #modal-box {
+      max-width: 480px;
+      width: 100%;
+      animation: modal-in .22s ease;
+    }
+    @keyframes modal-in {
+      from { opacity: 0; transform: translateY(-14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .modal-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .modal-list li { font-size: 0.84rem; color: var(--text); line-height: 1.55; }
+    .modal-close-btn {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 1rem;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 6px;
+      line-height: 1;
+      transition: color .15s, background .15s;
+    }
+    .modal-close-btn:hover { color: var(--text); background: rgba(255,255,255,0.06); }
+
     /* ── RESPONSIVE ──────────────────────────── */
     @media (max-width: 640px) {
       .banner h1 { font-size: 1.55rem; }
@@ -702,6 +744,25 @@
   </div>
 
 </div><!-- /main -->
+
+<!-- POPUP MODAL -->
+<div id="modal-overlay">
+  <div class="lb-card" id="modal-box">
+    <div class="lb-head">
+      <span class="lb-head-title">📌 עד שתזכרו בעל פה</span>
+      <button class="modal-close-btn" id="modal-close" aria-label="סגור">✕</button>
+    </div>
+    <div style="padding:20px 24px 24px">
+      <p style="font-size:0.82rem;color:var(--muted);margin-bottom:16px">אלו המסמכים שצריך לבקש מכל סוכן:</p>
+      <ul class="modal-list">
+        <li>✅ דוח מסלקה פנסיוני עדכני בפורמט PDF</li>
+        <li>✅ טפסי 106 החל משנת 2012</li>
+        <li>✅ אישור הצהרת הון אחרון מכל קופה <span style="color:var(--muted);font-size:0.75rem">(מופיע בדוח שנתי מקוצר)</span></li>
+        <li>✅ טופס נספח ב׳ / הכנה לטופס 161</li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 <footer>גישה לדף זה מותרת לבעלי הקישור בלבד &nbsp;·&nbsp; אין להפיץ</footer>
 
@@ -979,6 +1040,15 @@
     console.error(err);
     document.getElementById('refresh-label').textContent = 'שגיאה בטעינת נתונים';
   });
+
+  /* modal */
+  (function() {
+    const overlay  = document.getElementById('modal-overlay');
+    const closeBtn = document.getElementById('modal-close');
+    function closeModal() { overlay.classList.add('hidden'); }
+    closeBtn.addEventListener('click', closeModal);
+    overlay.addEventListener('click', function(e) { if (e.target === overlay) closeModal(); });
+  })();
 </script>
 </body>
 </html>
