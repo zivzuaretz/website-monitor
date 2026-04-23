@@ -10,7 +10,7 @@
     { "name": "זיו זוארץ",        "team": "זיו זוארץ",    "points": 2, "x2_count": 0, "league": null, "rank_change": 0, "weekly_new": 2, "no_prizes": true  },
     { "name": "גל גבאי",          "team": "זיו זוארץ",    "points": 1, "x2_count": 0, "league": null, "rank_change": 0, "weekly_new": 1, "no_prizes": false },
     { "name": "עדי להב",           "team": "זיו זוארץ",    "points": 0, "x2_count": 0, "league": null, "rank_change": 0, "weekly_new": 0, "no_prizes": false },
-    { "name": "באנצ׳י בירוק",     "team": "זיו זוארץ",    "points": 2, "x2_count": 2, "league": null, "rank_change": 0, "weekly_new": 1, "no_prizes": false },
+    { "name": "באנצ׳י בירוק",     "team": "זיו זוארץ",    "points": 2, "x2_count": 1, "league": null, "rank_change": 0, "weekly_new": 1, "no_prizes": false },
     { "name": "אופיר בגיזדה",     "team": "זיו זוארץ",    "points": 0, "x2_count": 0, "league": null, "rank_change": 0, "weekly_new": 0, "no_prizes": false },
     { "name": "נתיב לוגסי",        "team": "זיו זוארץ",    "points": 2, "x2_count": 0, "league": null, "rank_change": 0, "weekly_new": 2, "no_prizes": false },
     { "name": "אילן גמליאל",      "team": "אורון בן חמו", "points": 0, "x2_count": 0, "league": null, "rank_change": 0, "weekly_new": 0, "no_prizes": false },

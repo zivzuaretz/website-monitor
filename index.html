@@ -812,7 +812,7 @@
     const phase   = data.phase || 1;
     const target  = data.group_target || 80;
     const sups    = [...data.supervisors].sort((a, b) => b.points - a.points);
-    const total   = sups.reduce((s, x) => s + (x.points || 0), 0);
+    const total   = sups.reduce((s, x) => s + (x.points || 0) - (x.x2_count || 0), 0);
 
     /* refresh date */
     document.getElementById('refresh-label').textContent = fmtDate(data.refresh_date);
