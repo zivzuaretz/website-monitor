@@ -909,8 +909,9 @@
       const rank   = isManager ? null : competitors.indexOf(s) + 1;
       const pts    = s.points || 0;
       const x2     = s.x2_count || 0;
-      const minPct = clamp(Math.round(pts / MIN_TARGET * 100), 0, 100);
-      const ok     = pts >= MIN_TARGET;
+      const cases  = pts - x2;
+      const minPct = clamp(Math.round(cases / MIN_TARGET * 100), 0, 100);
+      const ok     = cases >= MIN_TARGET;
 
       /* league dividers — only for competitors */
       if (!isManager) {
@@ -969,7 +970,7 @@
               <div class="min-track">
                 <div class="min-fill ${minPct < 100 ? 'warn' : ''}" style="width:${minPct}%"></div>
               </div>
-              <div class="min-lbl">${pts} / ${MIN_TARGET}</div>
+              <div class="min-lbl">${cases} / ${MIN_TARGET}</div>
             </div>`}
         <span class="c-chk">${isManager ? '' : ok ? '✅' : ''}</span>`;
       body.appendChild(row);
