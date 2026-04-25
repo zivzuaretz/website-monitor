@@ -749,17 +749,15 @@
 <div id="modal-overlay">
   <div class="lb-card" id="modal-box">
     <div class="lb-head">
-      <span class="lb-head-title">📌 עד שתזכרו בעל פה</span>
+      <span class="lb-head-title">🚀 שבוע חדש במבצע</span>
       <button class="modal-close-btn" id="modal-close" aria-label="סגור">✕</button>
     </div>
     <div style="padding:20px 24px 24px">
-      <p style="font-size:0.82rem;color:var(--muted);margin-bottom:16px">אלו המסמכים שצריך לבקש מכל סוכן:</p>
-      <ul class="modal-list">
-        <li>✅ דוח מסלקה פנסיוני עדכני בפורמט PDF</li>
-        <li>✅ טפסי 106 החל משנת 2012</li>
-        <li>✅ אישור הצהרת הון אחרון מכל קופה <span style="color:var(--muted);font-size:0.75rem">(מופיע בדוח שנתי מקוצר)</span></li>
-        <li>✅ טופס נספח ב׳ / הכנה לטופס 161</li>
-      </ul>
+      <p style="font-size:0.92rem;font-weight:600;color:var(--text);margin-bottom:12px">זה הזמן שלך לפתוח פער 🎯</p>
+      <div class="countdown" id="modal-countdown" style="margin-top:0;margin-bottom:16px"></div>
+      <hr class="sales-divider">
+      <div class="sales-title" style="margin-top:14px">סטטוס צוותים</div>
+      <div id="modal-teams"></div>
     </div>
   </div>
 </div>
@@ -767,6 +765,7 @@
 <footer>גישה לדף זה מותרת לבעלי הקישור בלבד &nbsp;·&nbsp; אין להפיץ</footer>
 
 <script>
+  let _cachedData = null;
   const MIN_TARGET = 10;
 
   const supervisorImages = {
@@ -809,6 +808,7 @@
 
   async function render() {
     const data = await loadData();
+    _cachedData = data;
     const phase   = data.phase || 1;
     const target  = data.group_target || 80;
     const sups    = [...data.supervisors].sort((a, b) => b.points - a.points);
@@ -1049,6 +1049,81 @@
     function closeModal() { overlay.classList.add('hidden'); }
     closeBtn.addEventListener('click', closeModal);
     overlay.addEventListener('click', function(e) { if (e.target === overlay) closeModal(); });
+
+    /* next Friday 18:00 Israel time */
+    function nextFriday18Israel() {
+      const tz  = 'Asia/Jerusalem';
+      const now = new Date();
+      const todayStr = new Intl.DateTimeFormat('en-CA', {
+        timeZone: tz, year:'numeric', month:'2-digit', day:'2-digit'
+      }).format(now);
+      const today    = new Date(todayStr + 'T00:00:00Z');
+      let daysUntil  = (5 - today.getUTCDay() + 7) % 7;
+      if (daysUntil === 0) {
+        const h = parseInt(new Intl.DateTimeFormat('en', {
+          timeZone: tz, hour:'numeric', hour12: false
+        }).format(now));
+        if (h >= 18) daysUntil = 7;
+      }
+      const fridayStr   = new Date(today.getTime() + daysUntil * 86400000).toISOString().slice(0, 10);
+      const noonFriday  = new Date(fridayStr + 'T12:00:00Z');
+      const offsetH     = parseInt(new Intl.DateTimeFormat('en', {
+        timeZone: tz, hour:'numeric', hour12: false
+      }).format(noonFriday)) - 12;
+      return new Date(fridayStr + 'T' + String(18 - offsetH).padStart(2, '0') + ':00:00Z');
+    }
+
+    function updateCountdown() {
+      const el   = document.getElementById('modal-countdown');
+      if (!el) return;
+      const diff = nextFriday18Israel() - new Date();
+      if (diff <= 0) { el.innerHTML = '<span class="cd-label">השבוע הסתיים!</span>'; return; }
+      const pad  = n => String(n).padStart(2, '0');
+      const h    = Math.floor(diff / 3600000);
+      const m    = Math.floor((diff % 3600000) / 60000);
+      const s    = Math.floor((diff % 60000) / 1000);
+      const dot  = '<span style="color:var(--muted);margin:0 4px">·</span>';
+      el.innerHTML =
+        `<span class="cd-num">${pad(h)}</span><span class="cd-label">שע׳</span>${dot}` +
+        `<span class="cd-num">${pad(m)}</span><span class="cd-label">דק׳</span>${dot}` +
+        `<span class="cd-num">${pad(s)}</span><span class="cd-label">שנ׳</span>`;
+    }
+
+    const TEAMS = [
+      { label: 'צוות זיו',   members: ['גל גבאי','עדי להב','באנצ׳י בירוק','הילה לוי סוויסה'] },
+      { label: 'צוות אורון', members: ['אופיר בגיזדה','נתיב לוגסי','אילן גמליאל','ילנה דזורוב'] }
+    ];
+
+    function renderModalTeams() {
+      const el = document.getElementById('modal-teams');
+      if (!el || !_cachedData) return;
+      const sups = _cachedData.supervisors;
+      let html = '';
+      for (const t of TEAMS) {
+        const rows = t.members
+          .map(n => sups.find(s => s.name === n))
+          .filter(s => s && s.points > 0)
+          .sort((a, b) => b.points - a.points);
+        if (!rows.length) continue;
+        html += `<div style="margin-bottom:14px">` +
+          `<div style="font-size:0.7rem;font-weight:700;color:var(--indigo);margin-bottom:6px;letter-spacing:0.3px">${t.label}</div>`;
+        for (const s of rows) {
+          html += `<div style="display:flex;justify-content:space-between;align-items:center;` +
+            `padding:7px 0;border-bottom:1px solid #0b0e1c;font-size:0.83rem">` +
+            `<span style="color:var(--text)">${s.name}</span>` +
+            `<span style="font-weight:700;color:#fff">${s.points} ` +
+            `<span style="color:var(--muted);font-weight:400;font-size:0.72rem">נק׳</span></span></div>`;
+        }
+        html += '</div>';
+      }
+      if (!html) html = `<div style="font-size:0.82rem;color:var(--muted);text-align:center;padding:8px 0">טרם נרשמו נקודות השבוע</div>`;
+      el.innerHTML = html;
+    }
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+    renderModalTeams();
+    setInterval(renderModalTeams, 3000);
   })();
 </script>
 </body>
