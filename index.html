@@ -754,7 +754,10 @@
     </div>
     <div style="padding:20px 24px 24px">
       <p style="font-size:0.92rem;font-weight:600;color:var(--text);margin-bottom:12px">זה הזמן שלך לפתוח פער 🎯</p>
-      <div class="countdown" id="modal-countdown" style="margin-top:0;margin-bottom:16px"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
+        <div class="countdown" id="modal-cd-1" style="margin-top:0;flex-direction:column;align-items:flex-start;gap:3px"></div>
+        <div class="countdown" id="modal-cd-2" style="margin-top:0;flex-direction:column;align-items:flex-start;gap:3px"></div>
+      </div>
       <hr class="sales-divider">
       <div class="sales-title" style="margin-top:14px">סטטוס צוותים</div>
       <div id="modal-teams"></div>
@@ -1052,43 +1055,22 @@
     closeBtn.addEventListener('click', closeModal);
     overlay.addEventListener('click', function(e) { if (e.target === overlay) closeModal(); });
 
-    /* next Friday 18:00 Israel time */
-    function nextFriday18Israel() {
-      const tz  = 'Asia/Jerusalem';
-      const now = new Date();
-      const todayStr = new Intl.DateTimeFormat('en-CA', {
-        timeZone: tz, year:'numeric', month:'2-digit', day:'2-digit'
-      }).format(now);
-      const today    = new Date(todayStr + 'T00:00:00Z');
-      let daysUntil  = (5 - today.getUTCDay() + 7) % 7;
-      if (daysUntil === 0) {
-        const h = parseInt(new Intl.DateTimeFormat('en', {
-          timeZone: tz, hour:'numeric', hour12: false
-        }).format(now));
-        if (h >= 18) daysUntil = 7;
-      }
-      const fridayStr   = new Date(today.getTime() + daysUntil * 86400000).toISOString().slice(0, 10);
-      const noonFriday  = new Date(fridayStr + 'T12:00:00Z');
-      const offsetH     = parseInt(new Intl.DateTimeFormat('en', {
-        timeZone: tz, hour:'numeric', hour12: false
-      }).format(noonFriday)) - 12;
-      return new Date(fridayStr + 'T' + String(18 - offsetH).padStart(2, '0') + ':00:00Z');
-    }
+    const PHASE_ENDS = [
+      { id: 'modal-cd-1', label: 'שלב א׳', end: new Date('2026-06-01T00:00:00+03:00') },
+      { id: 'modal-cd-2', label: 'שלב ב׳', end: new Date('2026-07-01T00:00:00+03:00') }
+    ];
 
     function updateCountdown() {
-      const el   = document.getElementById('modal-countdown');
-      if (!el) return;
-      const diff = nextFriday18Israel() - new Date();
-      if (diff <= 0) { el.innerHTML = '<span class="cd-label">השבוע הסתיים!</span>'; return; }
-      const pad  = n => String(n).padStart(2, '0');
-      const h    = Math.floor(diff / 3600000);
-      const m    = Math.floor((diff % 3600000) / 60000);
-      const s    = Math.floor((diff % 60000) / 1000);
-      const dot  = '<span style="color:var(--muted);margin:0 4px">·</span>';
-      el.innerHTML =
-        `<span class="cd-num">${pad(h)}</span><span class="cd-label">שע׳</span>${dot}` +
-        `<span class="cd-num">${pad(m)}</span><span class="cd-label">דק׳</span>${dot}` +
-        `<span class="cd-num">${pad(s)}</span><span class="cd-label">שנ׳</span>`;
+      const now = new Date();
+      for (const p of PHASE_ENDS) {
+        const el = document.getElementById(p.id);
+        if (!el) continue;
+        const days = Math.max(0, Math.ceil((p.end - now) / 86400000));
+        el.innerHTML = p.end <= now
+          ? `<span class="cd-label">${p.label}</span><span class="cd-label">הסתיים</span>`
+          : `<span class="cd-label">${p.label}</span>` +
+            `<span><span class="cd-num">${days}</span> <span class="cd-label">ימים לסיום</span></span>`;
+      }
     }
 
     function renderModalTeams() {
