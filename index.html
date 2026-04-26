@@ -677,7 +677,7 @@
       <span class="c-name">שם</span>
       <span class="c-rank">#</span>
       <span class="c-pts">נק׳</span>
-      <span class="c-chg">שינוי</span>
+      <span class="c-chg">תיקים</span>
       <span>מינימום 10</span>
       <span class="c-chk">✓</span>
     </div>
@@ -888,10 +888,7 @@
         <div class="weekly-row">
           <span class="weekly-pos">${icons[i]}</span>
           <span class="weekly-name">${s.name}</span>
-          <div class="weekly-stats">
-            <span class="weekly-rank-chg">עלה ${s.rank_change} מקומות השבוע</span>
-            <span class="weekly-files">+${s.weekly_new} תיקים חדשים</span>
-          </div>
+          <span class="weekly-files">צוות ${s.team}</span>
         </div>`).join('');
     }
 
@@ -968,7 +965,7 @@
         </div>
         <span class="c-rank ${rankCls}">${rankDisplay}</span>
         <span class="c-pts"><span class="pts-val">${pts}</span></span>
-        <span class="c-chg">${chgHtml}</span>
+        <span class="c-chg" style="text-align:center;font-weight:700;color:#fff;font-size:0.88rem">${isManager ? '—' : cases}</span>
         ${isManager
           ? `<span style="font-size:0.7rem;color:var(--muted);font-style:italic">לא משתתפת</span>`
           : `<div class="min-wrap">
