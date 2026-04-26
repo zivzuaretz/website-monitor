@@ -765,8 +765,9 @@
 <footer>גישה לדף זה מותרת לבעלי הקישור בלבד &nbsp;·&nbsp; אין להפיץ</footer>
 
 <script>
-  let _cachedData = null;
-  const MIN_TARGET = 10;
+  let _cachedData    = null;
+  let _modalRefresh  = null;
+  const MIN_TARGET   = 10;
 
   const supervisorImages = {
     "גל גבאי":          "images/supervisors/gal-gabay.png",
@@ -809,6 +810,7 @@
   async function render() {
     const data = await loadData();
     _cachedData = data;
+    if (_modalRefresh) _modalRefresh();
     const phase   = data.phase || 1;
     const target  = data.group_target || 80;
     const sups    = [...data.supervisors].sort((a, b) => b.points - a.points);
@@ -1089,41 +1091,43 @@
         `<span class="cd-num">${pad(s)}</span><span class="cd-label">שנ׳</span>`;
     }
 
-    const TEAMS = [
-      { label: 'צוות זיו',   members: ['גל גבאי','עדי להב','באנצ׳י בירוק','הילה לוי סוויסה'] },
-      { label: 'צוות אורון', members: ['אופיר בגיזדה','נתיב לוגסי','אילן גמליאל','ילנה דזורוב'] }
-    ];
-
     function renderModalTeams() {
       const el = document.getElementById('modal-teams');
       if (!el || !_cachedData) return;
-      const sups = _cachedData.supervisors;
+      const competitors = _cachedData.supervisors.filter(s => !s.no_prizes);
+
+      /* build teams dynamically from data */
+      const teamMap = {};
+      for (const s of competitors) {
+        if (!teamMap[s.team]) teamMap[s.team] = [];
+        teamMap[s.team].push(s);
+      }
+
       let html = '';
-      for (const t of TEAMS) {
-        const rows = t.members
-          .map(n => sups.find(s => s.name === n))
-          .filter(s => s && s.points > 0)
+      for (const [teamName, members] of Object.entries(teamMap)) {
+        const rows = members
+          .filter(s => s.points > 0)
           .sort((a, b) => b.points - a.points);
         if (!rows.length) continue;
         html += `<div style="margin-bottom:14px">` +
-          `<div style="font-size:0.7rem;font-weight:700;color:var(--indigo);margin-bottom:6px;letter-spacing:0.3px">${t.label}</div>`;
+          `<div style="font-size:0.7rem;font-weight:700;color:var(--indigo);margin-bottom:6px;letter-spacing:0.3px">צוות ${teamName}</div>`;
         for (const s of rows) {
           html += `<div style="display:flex;justify-content:space-between;align-items:center;` +
-            `padding:7px 0;border-bottom:1px solid #0b0e1c;font-size:0.83rem">` +
-            `<span style="color:var(--text)">${s.name}</span>` +
-            `<span style="font-weight:700;color:#fff">${s.points} ` +
+            `padding:6px 0;border-bottom:1px solid #0b0e1c">` +
+            `<span style="display:flex;align-items:center;gap:8px;color:var(--text);font-size:0.83rem">` +
+            `${avatarImg(s.name)}<span>${s.name}</span></span>` +
+            `<span style="font-weight:700;color:#fff;font-size:0.83rem">${s.points} ` +
             `<span style="color:var(--muted);font-weight:400;font-size:0.72rem">נק׳</span></span></div>`;
         }
         html += '</div>';
       }
-      if (!html) html = `<div style="font-size:0.82rem;color:var(--muted);text-align:center;padding:8px 0">טרם נרשמו נקודות השבוע</div>`;
+      if (!html) html = `<div style="font-size:0.82rem;color:var(--muted);text-align:center;padding:8px 0">טרם נרשמו נקודות</div>`;
       el.innerHTML = html;
     }
 
+    _modalRefresh = renderModalTeams;
     updateCountdown();
     setInterval(updateCountdown, 1000);
-    renderModalTeams();
-    setInterval(renderModalTeams, 3000);
   })();
 </script>
 </body>
