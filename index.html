@@ -1091,13 +1091,14 @@
           .filter(s => s.points > 0)
           .sort((a, b) => b.points - a.points);
         if (!rows.length) continue;
-        html += `<div style="margin-bottom:14px">` +
-          `<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">` +
-          `${avatarImg(teamName)}` +
-          `<span style="font-size:0.75rem;font-weight:700;color:var(--indigo);letter-spacing:0.3px">צוות ${teamName}</span></div>`;
+        html += `<div style="margin-bottom:18px;padding-bottom:4px;border-bottom:1px solid var(--border)">` +
+          `<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">` +
+          `${avatarImg(teamName, 'avatar-lg')}` +
+          `<div><div style="font-size:1rem;font-weight:700;color:#fff">צוות ${teamName}</div>` +
+          `<div style="font-size:0.72rem;color:var(--indigo);margin-top:2px">${(_cachedData.team_managers||[]).find(m=>m.name===teamName)?.role||''}</div></div></div>`;
         for (const s of rows) {
           html += `<div style="display:flex;justify-content:space-between;align-items:center;` +
-            `padding:6px 0;border-bottom:1px solid #0b0e1c">` +
+            `padding:6px 0 6px 4px;border-bottom:1px solid #0b0e1c">` +
             `<span style="display:flex;align-items:center;gap:8px;color:var(--text);font-size:0.83rem">` +
             `${avatarImg(s.name)}<span>${s.name}</span></span>` +
             `<span style="font-weight:700;color:#fff;font-size:0.83rem">${s.points} ` +
