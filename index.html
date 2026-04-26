@@ -243,7 +243,7 @@
     /* column grid — direction:ltr so col order stays predictable */
     .col-hdr, .sup-row {
       display: grid;
-      grid-template-columns: 1fr 36px 60px 52px 76px 32px;
+      grid-template-columns: 36px 1fr 60px 52px 76px 32px;
       gap: 0;
       align-items: center;
     }
@@ -606,7 +606,7 @@
     @media (max-width: 640px) {
       .banner h1 { font-size: 1.55rem; }
       .col-hdr, .sup-row {
-        grid-template-columns: 1fr 28px 44px 40px 68px 24px;
+        grid-template-columns: 28px 1fr 44px 40px 68px 24px;
         padding-right: 12px; padding-left: 12px;
       }
       .teams-grid  { grid-template-columns: 1fr; }
@@ -677,8 +677,8 @@
       </div>
     </div>
     <div class="col-hdr">
-      <span class="c-name">שם</span>
       <span class="c-rank">#</span>
+      <span class="c-name">שם</span>
       <span class="c-pts">נק׳</span>
       <span class="c-chg">תיקים</span>
       <span>מינימום 10</span>
@@ -959,6 +959,7 @@
       const row = document.createElement('div');
       row.className = 'sup-row' + topCls + (isManager ? ' row-manager' : '');
       row.innerHTML = `
+        <span class="c-rank ${rankCls}">${rankDisplay}</span>
         <div class="c-name">
           ${avatarImg(s.name)}
           <div>
@@ -966,7 +967,6 @@
             <div class="sup-team">צוות ${s.team}</div>
           </div>
         </div>
-        <span class="c-rank ${rankCls}">${rankDisplay}</span>
         <span class="c-pts"><span class="pts-val">${pts}</span></span>
         <span class="c-chg" style="text-align:center;font-weight:700;color:#fff;font-size:0.9rem;line-height:1;display:block">${cases}</span>
         ${isManager
