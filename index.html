@@ -320,21 +320,21 @@
     }
 
     .sup-row {
-      padding: 9px 20px;
+      padding: 11px 20px;
       border-bottom: 1px solid #0b0e1c;
       transition: background .12s;
     }
     .sup-row:last-child { border-bottom: none; }
     .sup-row:hover { background: rgba(255,255,255,.022); }
 
-    .c-rank { font-size: 0.88rem; font-weight: 700; color: var(--muted); text-align: center; }
+    .c-rank { font-size: 0.9rem; font-weight: 700; color: var(--muted); text-align: center; }
     .r1 { color: #f59e0b; } .r2 { color: #94a3b8; } .r3 { color: #b87333; }
 
     .c-name { display: flex; align-items: center; gap: 8px; }
-    .c-name .sup-name { font-size: 0.84rem; font-weight: 600; color: var(--text); }
-    .c-name .sup-team { font-size: 0.68rem; color: var(--muted); margin-top: 1px; }
+    .c-name .sup-name { font-size: 0.9rem; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .c-name .sup-team { font-size: 0.72rem; color: var(--muted); margin-top: 2px; white-space: nowrap; }
     .avatar {
-      width: 32px; height: 32px; border-radius: 50%;
+      width: 38px; height: 38px; border-radius: 50%;
       object-fit: cover; flex-shrink: 0;
       border: 2px solid var(--border);
       background: var(--card2);
@@ -347,7 +347,7 @@
     }
 
     .c-pts .pts-val {
-      font-size: 0.84rem; font-weight: 700; color: #fff;
+      font-size: 0.9rem; font-weight: 700; color: #fff;
       display: block; text-align: center;
     }
 
@@ -968,7 +968,7 @@
         </div>
         <span class="c-rank ${rankCls}">${rankDisplay}</span>
         <span class="c-pts"><span class="pts-val">${pts}</span></span>
-        <span class="c-chg" style="text-align:center;font-weight:700;color:#fff;font-size:0.88rem">${cases}</span>
+        <span class="c-chg" style="text-align:center;font-weight:700;color:#fff;font-size:0.9rem">${cases}</span>
         ${isManager
           ? `<span style="font-size:0.7rem;color:var(--muted);font-style:italic">לא משתתפת</span>`
           : `<div class="min-wrap">
