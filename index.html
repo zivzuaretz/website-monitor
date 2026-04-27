@@ -602,6 +602,29 @@
     }
     .modal-close-btn:hover { color: var(--text); background: rgba(255,255,255,0.06); }
 
+    /* ── MODAL ANIMATIONS ───────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes glowPulse {
+      0%   { box-shadow: 0 0 0 0 rgba(245,158,11,0); }
+      50%  { box-shadow: 0 0 14px 4px rgba(245,158,11,0.45); }
+      100% { box-shadow: 0 0 8px 2px rgba(245,158,11,0.18); }
+    }
+    .modal-bar {
+      height: 9px; border-radius: 999px; width: 0;
+      background: linear-gradient(90deg, #d97706, #fbbf24);
+      transition: width 0.9s ease-out;
+    }
+    .modal-verdict { opacity: 0; animation: fadeUp 0.5s ease forwards; animation-delay: 0.5s; }
+    .modal-leader-glow { animation: glowPulse 1.2s ease-out forwards; }
+    @media (prefers-reduced-motion: reduce) {
+      .modal-bar { transition: none; }
+      .modal-verdict { animation: none; opacity: 1; }
+      .modal-leader-glow { animation: none; }
+    }
+
     /* ── RESPONSIVE ──────────────────────────── */
     @media (max-width: 640px) {
       .banner h1 { font-size: 1.55rem; }
@@ -1082,28 +1105,33 @@
       for (const s of _cachedData.supervisors) {
         teamMap[s.team] = (teamMap[s.team] || 0) + (s.points || 0);
       }
-      const teams  = Object.entries(teamMap).sort((a, b) => b[1] - a[1]);
-      const maxPts = teams[0]?.[1] || 1;
-      const diff   = teams.length >= 2 ? teams[0][1] - teams[1][1] : 0;
-      const verdict = diff === 0
-        ? `<div style="font-size:0.8rem;color:var(--gold);margin-top:12px;text-align:center">🔥 הכול פתוח</div>`
-        : diff >= 3
-        ? `<div style="font-size:0.8rem;color:var(--gold);margin-top:12px;text-align:center">👑 יתרון לצוות ${teams[0][0]}</div>`
-        : '';
-      const teamsHtml = teams.map(([name, pts]) => {
-        const pct = Math.max(6, Math.round((pts / maxPts) * 100));
+      const teams   = Object.entries(teamMap).sort((a, b) => b[1] - a[1]);
+      const maxPts  = teams[0]?.[1] || 1;
+      const diff    = teams.length >= 2 ? teams[0][1] - teams[1][1] : 0;
+      const barW    = teams.map((t, i) => i === 0 ? 80 : Math.max(18, Math.round((t[1] / maxPts) * 80)));
+      const genderMap  = { 'זיו זוארץ': 'מובילה', 'אורון בן חמו': 'מוביל' };
+      const leaderName = teams[0]?.[0] || '';
+      const verdictText = diff === 0
+        ? '🔥 הכול פתוח'
+        : `👑 ${leaderName} ${genderMap[leaderName] || 'מוביל/ה'} כרגע`;
+      const teamsHtml = teams.map(([name, pts], i) => {
+        const isLeader = i === 0 && diff > 0;
+        const src = supervisorImages[name];
+        const imgEl = src
+          ? `<img class="avatar-lg${isLeader ? ' modal-leader-glow' : ''}" src="${src}" alt="${name}" onerror="this.style.visibility='hidden'">`
+          : `<div class="avatar-lg${isLeader ? ' modal-leader-glow' : ''}" style="background:var(--card2)"></div>`;
         return `<div style="margin-bottom:18px">` +
           `<div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">` +
-          `${avatarImg(name, 'avatar-lg')}` +
+          `${imgEl}` +
           `<div style="flex:1">` +
             `<div style="font-size:0.95rem;font-weight:700;color:#fff;margin-bottom:2px">צוות ${name}</div>` +
             `<div style="font-size:0.82rem;color:var(--muted)">${pts} נק׳</div>` +
           `</div></div>` +
-          `<div style="background:#131829;border-radius:999px;height:10px;overflow:hidden">` +
-            `<div style="height:100%;border-radius:999px;width:${pct}%;` +
-            `background:linear-gradient(90deg,#d97706,#fbbf24);transition:width 0.8s ease"></div>` +
+          `<div style="background:#131829;border-radius:999px;height:9px;overflow:hidden">` +
+            `<div class="modal-bar" data-w="${barW[i]}"></div>` +
           `</div></div>`;
-      }).join('') + verdict;
+      }).join('') +
+        `<div class="modal-verdict" style="font-size:0.82rem;color:var(--gold);text-align:center;margin-top:8px">${verdictText}</div>`;
 
       el.innerHTML =
         `<div style="margin-bottom:16px">` +
@@ -1114,6 +1142,10 @@
         `<hr class="sales-divider">` +
         `<div style="margin-top:14px;background:rgba(245,158,11,0.04);border:1px solid rgba(245,158,11,0.12);border-radius:12px;padding:16px 14px 12px">` +
           `<div class="sales-title" style="margin-bottom:14px">🏆 מי מוביל בבית?</div>${teamsHtml}</div>`;
+
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        el.querySelectorAll('.modal-bar').forEach(b => { b.style.width = b.dataset.w + '%'; });
+      }));
     }
 
     _modalRefresh = renderModal;
