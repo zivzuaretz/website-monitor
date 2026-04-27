@@ -880,7 +880,7 @@
     const ranked   = data.supervisors
       .filter(s => !s.no_prizes)
       .filter(s => (s.weekly_new || 0) > 0)
-      .sort((a, b) => (b.weekly_new || 0) - (a.weekly_new || 0))
+      .sort((a, b) => (b.points || 0) - (a.points || 0))
       .slice(0, 3);
 
     if (ranked.length === 0) {
