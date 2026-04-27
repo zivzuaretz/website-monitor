@@ -1079,7 +1079,7 @@
 
       /* ── Section 3: מי מוביל בבית ── */
       const teamMap = {};
-      for (const s of competitors) {
+      for (const s of _cachedData.supervisors) {
         teamMap[s.team] = (teamMap[s.team] || 0) + (s.points || 0);
       }
       const teams = Object.entries(teamMap).sort((a, b) => b[1] - a[1]);
