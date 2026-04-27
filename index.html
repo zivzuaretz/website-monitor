@@ -1120,18 +1120,17 @@
         const imgEl = src
           ? `<img class="avatar-lg${isLeader ? ' modal-leader-glow' : ''}" src="${src}" alt="${name}" onerror="this.style.visibility='hidden'">`
           : `<div class="avatar-lg${isLeader ? ' modal-leader-glow' : ''}" style="background:var(--card2)"></div>`;
-        return `<div style="margin-bottom:18px">` +
-          `<div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">` +
+        return `<div style="display:grid;grid-template-columns:64px 1fr;gap:12px;margin-bottom:18px;align-items:start">` +
           `${imgEl}` +
-          `<div style="flex:1">` +
+          `<div>` +
             `<div style="font-size:0.95rem;font-weight:700;color:#fff;margin-bottom:2px">צוות ${name}</div>` +
-            `<div style="font-size:0.82rem;color:var(--muted)">${pts} נק׳</div>` +
-          `</div></div>` +
-          `<div style="background:#131829;border-radius:999px;height:9px;overflow:hidden">` +
-            `<div class="modal-bar" data-w="${barW[i]}"></div>` +
+            `<div style="font-size:0.82rem;color:var(--muted);margin-bottom:10px">${pts} נק׳</div>` +
+            `<div style="background:#131829;border-radius:999px;height:9px;overflow:hidden">` +
+              `<div class="modal-bar" data-w="${barW[i]}"></div>` +
+            `</div>` +
           `</div></div>`;
       }).join('') +
-        `<div class="modal-verdict" style="font-size:0.82rem;color:var(--gold);text-align:center;margin-top:8px">${verdictText}</div>`;
+        `<div class="modal-verdict" style="font-size:0.82rem;color:var(--gold);text-align:center;margin-top:18px">${verdictText}</div>`;
 
       el.innerHTML =
         `<div style="margin-bottom:16px">` +
