@@ -376,59 +376,6 @@
     .c-chk { font-size: 1rem; text-align: center; }
     .row-manager { opacity: 0.75; }
 
-    /* ── WEEKLY LEADERS ─────────────────────── */
-    .weekly-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      overflow: hidden;
-      margin-bottom: 20px;
-    }
-    .weekly-head {
-      padding: 10px 16px;
-      background: var(--card2);
-      border-bottom: 1px solid var(--border);
-      font-weight: 700; font-size: 0.88rem; color: #fff;
-      display: flex; align-items: center; gap: 8px;
-    }
-    .weekly-body { padding: 2px 0; }
-    .weekly-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 7px 16px;
-      border-bottom: 1px solid #0b0e1c;
-    }
-    .weekly-row:last-child { border-bottom: none; }
-    .weekly-pos {
-      font-size: 1rem;
-      width: 22px; flex-shrink: 0; text-align: center;
-    }
-    .weekly-name {
-      font-size: 0.83rem; font-weight: 700; color: var(--text); flex: 1;
-    }
-    .weekly-stats { display: flex; flex-direction: column; gap: 3px; align-items: flex-end; }
-    .weekly-rank-chg {
-      font-size: 0.75rem; font-weight: 700; color: var(--green);
-    }
-    .weekly-files {
-      font-size: 0.7rem; color: var(--muted);
-    }
-    .weekly-footer {
-      text-align: center;
-      padding: 8px 16px;
-      font-size: 0.76rem; font-weight: 600;
-      color: var(--gold);
-      background: rgba(245,158,11,0.04);
-      border-top: 1px solid var(--border);
-    }
-    .weekly-empty {
-      padding: 16px 20px;
-      text-align: center;
-      color: var(--muted);
-      font-size: 0.82rem;
-    }
-
     /* ── SALES INFO ─────────────────────────── */
     .sales-card {
       background: var(--card);
@@ -681,14 +628,6 @@
     <!-- JS renders -->
   </div>
 
-  <!-- WEEKLY LEADERS -->
-  <div class="section-label">מובילי השבוע</div>
-  <div class="weekly-card">
-    <div class="weekly-head">⚡ מובילי השבוע</div>
-    <div class="weekly-body" id="weekly-body"></div>
-    <div class="weekly-footer">השבוע הבא — שלך? 🎯</div>
-  </div>
-
   <!-- LEADERBOARD -->
   <div class="section-label">דירוג מפקחים</div>
   <div class="lb-card">
@@ -889,26 +828,6 @@
     renderPhases();
     setInterval(renderPhases, 60000);
 
-    /* weekly leaders */
-    const weeklyEl = document.getElementById('weekly-body');
-    const ranked   = data.supervisors
-      .filter(s => !s.no_prizes)
-      .filter(s => (s.weekly_new || 0) > 0)
-      .sort((a, b) => (b.points || 0) - (a.points || 0))
-      .slice(0, 3);
-
-    if (ranked.length === 0) {
-      weeklyEl.innerHTML = '<div class="weekly-empty">נתוני השבוע יעודכנו בקרוב ✨</div>';
-    } else {
-      const icons = ['🔥', '⭐', '✨'];
-      weeklyEl.innerHTML = ranked.map((s, i) => `
-        <div class="weekly-row">
-          <span class="weekly-pos">${icons[i]}</span>
-          <span class="weekly-name">${s.name}</span>
-          <span class="weekly-files">צוות ${s.team}</span>
-        </div>`).join('');
-    }
-
     /* sales info */
     renderSales(data.sales);
 
@@ -1078,7 +997,7 @@
       const ranked = competitors.filter(s => s.points > 0).sort((a, b) => b.points - a.points);
       let battleHtml;
       if (ranked.length < 2) {
-        battleHtml = `<div style="font-size:0.85rem;color:var(--muted)">הכול פתוח השבוע 🔥</div>`;
+        battleHtml = `<div style="font-size:0.85rem;color:var(--muted)">הכול פתוח 🔥</div>`;
       } else {
         let minGap = Infinity, idx = 0;
         for (let i = 0; i < ranked.length - 1; i++) {
@@ -1086,19 +1005,24 @@
           if (g < minGap) { minGap = g; idx = i; }
         }
         const ahead = ranked[idx], behind = ranked[idx + 1];
-        const txt = minGap === 0
-          ? `${behind.name} ו-${ahead.name} — תיקו! מי יפרוץ קדימה? 🔥`
-          : `${behind.name} רחוק/ה ${minGap === 1 ? 'נקודה אחת' : minGap + ' נקודות'} מלעקוף את ${ahead.name}`;
-        battleHtml = `<div style="font-size:0.85rem;color:var(--text);line-height:1.55">${txt}</div>`;
+        const subLine = minGap === 0
+          ? `תיקו 🔥`
+          : `פער ${minGap === 1 ? 'תיק 1' : minGap + ' תיקים'}`;
+        battleHtml =
+          `<div style="font-size:0.95rem;font-weight:700;color:#fff;margin-bottom:4px">${ahead.name} vs ${behind.name}</div>` +
+          `<div style="font-size:0.82rem;color:var(--muted)">${subLine}</div>`;
       }
 
       /* ── Section 2: עדיין ישנים ── */
       const sleeping = competitors.filter(s => s.points === 0);
-      const sleepingHtml = sleeping.length === 0
-        ? `<div style="font-size:0.85rem;color:var(--muted)">כולם בתנועה השבוע 🚀</div>`
-        : `<div style="display:flex;flex-wrap:wrap;gap:6px">${
-            sleeping.map(s => `<span class="chip">${s.name}</span>`).join('')
-          }</div>`;
+      let sleepingHtml;
+      if (sleeping.length === 0) {
+        sleepingHtml = `<div style="font-size:0.85rem;color:var(--muted)">כולם בתנועה השבוע 🚀</div>`;
+      } else {
+        const shown = sleeping.slice(0, 3).map(s => s.name).join(' • ');
+        const extra = sleeping.length > 3 ? ` <span style="color:var(--muted)">+${sleeping.length - 3}</span>` : '';
+        sleepingHtml = `<div style="font-size:0.85rem;color:var(--text);line-height:1.7">${shown}${extra}</div>`;
+      }
 
       /* ── Section 3: מי מוביל בבית ── */
       const teamMap = {};
