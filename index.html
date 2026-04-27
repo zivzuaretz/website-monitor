@@ -879,8 +879,8 @@
     const weeklyEl = document.getElementById('weekly-body');
     const ranked   = data.supervisors
       .filter(s => !s.no_prizes)
-      .filter(s => (s.rank_change || 0) > 0 || (s.weekly_new || 0) > 0)
-      .sort((a, b) => (b.rank_change || 0) - (a.rank_change || 0) || (b.weekly_new || 0) - (a.weekly_new || 0))
+      .filter(s => (s.weekly_new || 0) > 0)
+      .sort((a, b) => (b.weekly_new || 0) - (a.weekly_new || 0))
       .slice(0, 3);
 
     if (ranked.length === 0) {
