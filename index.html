@@ -1082,20 +1082,28 @@
       for (const s of _cachedData.supervisors) {
         teamMap[s.team] = (teamMap[s.team] || 0) + (s.points || 0);
       }
-      const teams = Object.entries(teamMap).sort((a, b) => b[1] - a[1]);
-      const diff  = teams.length >= 2 ? teams[0][1] - teams[1][1] : 0;
+      const teams  = Object.entries(teamMap).sort((a, b) => b[1] - a[1]);
+      const maxPts = teams[0]?.[1] || 1;
+      const diff   = teams.length >= 2 ? teams[0][1] - teams[1][1] : 0;
       const verdict = diff === 0
-        ? `<div style="font-size:0.78rem;color:var(--gold);margin-top:8px">🔥 הכול פתוח</div>`
+        ? `<div style="font-size:0.8rem;color:var(--gold);margin-top:12px;text-align:center">🔥 הכול פתוח</div>`
         : diff >= 3
-        ? `<div style="font-size:0.78rem;color:var(--gold);margin-top:8px">👑 יתרון לצוות ${teams[0][0]}</div>`
+        ? `<div style="font-size:0.8rem;color:var(--gold);margin-top:12px;text-align:center">👑 יתרון לצוות ${teams[0][0]}</div>`
         : '';
-      const teamsHtml = teams.map(([name, pts]) =>
-        `<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">` +
-        `${avatarImg(name)}` +
-        `<span style="font-size:0.88rem;color:var(--text);flex:1">צוות ${name}</span>` +
-        `<span style="font-weight:700;color:#fff;font-size:0.88rem">${pts} ` +
-        `<span style="color:var(--muted);font-weight:400;font-size:0.72rem">נק׳</span></span></div>`
-      ).join('') + verdict;
+      const teamsHtml = teams.map(([name, pts]) => {
+        const pct = Math.max(6, Math.round((pts / maxPts) * 100));
+        return `<div style="margin-bottom:18px">` +
+          `<div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">` +
+          `${avatarImg(name, 'avatar-lg')}` +
+          `<div style="flex:1">` +
+            `<div style="font-size:0.95rem;font-weight:700;color:#fff;margin-bottom:2px">צוות ${name}</div>` +
+            `<div style="font-size:0.82rem;color:var(--muted)">${pts} נק׳</div>` +
+          `</div></div>` +
+          `<div style="background:#131829;border-radius:999px;height:10px;overflow:hidden">` +
+            `<div style="height:100%;border-radius:999px;width:${pct}%;` +
+            `background:linear-gradient(90deg,#d97706,#fbbf24);transition:width 0.8s ease"></div>` +
+          `</div></div>`;
+      }).join('') + verdict;
 
       el.innerHTML =
         `<div style="margin-bottom:16px">` +
@@ -1104,8 +1112,8 @@
         `<div style="margin:14px 0 16px">` +
           `<div class="sales-title" style="margin-bottom:8px">💤 עדיין ישנים..</div>${sleepingHtml}</div>` +
         `<hr class="sales-divider">` +
-        `<div style="margin-top:14px">` +
-          `<div class="sales-title" style="margin-bottom:10px">🏆 מי מוביל בבית?</div>${teamsHtml}</div>`;
+        `<div style="margin-top:14px;background:rgba(245,158,11,0.04);border:1px solid rgba(245,158,11,0.12);border-radius:12px;padding:16px 14px 12px">` +
+          `<div class="sales-title" style="margin-bottom:14px">🏆 מי מוביל בבית?</div>${teamsHtml}</div>`;
     }
 
     _modalRefresh = renderModal;
