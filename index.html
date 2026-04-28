@@ -903,7 +903,7 @@
         <span class="c-pts"><span class="pts-val">${pts}</span></span>
         <span class="c-chg" style="text-align:center;font-weight:700;color:#fff;font-size:0.9rem;line-height:1;display:block">${cases}</span>
         ${isManager
-          ? `<span style="font-size:0.7rem;color:var(--muted);font-style:italic">לא משתתפת</span>`
+          ? `<span style="font-size:0.7rem;color:var(--muted);font-style:italic">${{'זיו זוארץ':'לא משתתפת'}[s.name] || 'לא משתתף'}</span>`
           : `<div class="min-wrap">
               <div class="min-track">
                 <div class="min-fill ${minPct < 100 ? 'warn' : ''}" style="width:${minPct}%"></div>
