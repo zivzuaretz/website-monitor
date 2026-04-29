@@ -567,10 +567,27 @@
     }
     .modal-verdict { opacity: 0; animation: fadeUp 0.5s ease forwards; animation-delay: 0.5s; }
     .modal-leader-glow { animation: glowPulse 1.2s ease-out forwards; }
+    @keyframes closePulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(220,38,38,0); }
+      55%       { box-shadow: 0 0 0 6px rgba(220,38,38,0.3); }
+    }
+    @keyframes modal-in-mobile {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .modal-close-hint {
+      display: none;
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.28);
+      text-align: center;
+      padding: 5px 16px 0;
+      letter-spacing: 0.01em;
+    }
     @media (prefers-reduced-motion: reduce) {
       .modal-bar { transition: none; }
       .modal-verdict { animation: none; opacity: 1; }
       .modal-leader-glow { animation: none; }
+      .modal-close-btn  { animation: none; }
     }
 
     /* ── RESPONSIVE ──────────────────────────── */
@@ -585,6 +602,25 @@
       .prize-col   { border-right: none; border-bottom: 1px solid var(--border); }
       .prize-col:last-child { border-bottom: none; }
       .phase-row   { grid-template-columns: 1fr; }
+
+      /* ── MOBILE POPUP ── */
+      #modal-overlay {
+        background: rgba(8,11,20,0.52);
+        backdrop-filter: blur(2px);
+        align-items: flex-start;
+        padding-top: 9vh;
+        overflow-y: auto;
+      }
+      #modal-box {
+        width: 89%;
+        max-height: 82vh;
+        overflow-y: auto;
+        animation: modal-in-mobile .3s ease;
+      }
+      .modal-close-btn {
+        animation: closePulse 1.5s ease-in-out 1.2s infinite;
+      }
+      .modal-close-hint { display: block; }
     }
   </style>
 </head>
@@ -718,6 +754,7 @@
       <span class="lb-head-title" id="modal-title">🚀 שבוע שני למבצע</span>
       <button class="modal-close-btn" id="modal-close" aria-label="סגור">✕</button>
     </div>
+    <div class="modal-close-hint">סגור לצפייה בלוח המלא 👇</div>
     <div style="padding:20px 24px 24px" id="modal-content"></div>
   </div>
 </div>
