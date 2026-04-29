@@ -1119,7 +1119,7 @@
               .map(s =>
                 `<div style="display:grid;grid-template-columns:1fr auto;gap:8px;padding:2px 0 2px 8px">` +
                 `<span style="font-size:0.78rem;color:var(--muted)">${s.name}</span>` +
-                `<span style="font-size:0.78rem;color:var(--muted)">${fmtC(s.amount)}</span>` +
+                `<span style="font-size:0.78rem;color:var(--muted)" data-countup="${s.amount}">${fmtC(s.amount)}</span>` +
                 `</div>`
               ).join('');
             return `<div style="${rowStyle}">` +
@@ -1130,7 +1130,7 @@
         const productRows = (sales.by_product || []).filter(p => p.amount > 0).map(p =>
           `<div style="${rowStyle}">` +
           `<span style="font-size:0.85rem;color:var(--muted)">${p.label}</span>` +
-          `<span style="font-size:0.85rem;font-weight:700;color:#fff">${fmtC(p.amount)}</span>` +
+          `<span style="font-size:0.85rem;font-weight:700;color:#fff" data-countup="${p.amount}">${fmtC(p.amount)}</span>` +
           `</div>`
         ).join('');
         const productSection = productRows
