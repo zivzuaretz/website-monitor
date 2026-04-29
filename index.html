@@ -993,24 +993,27 @@
       if (!el || !_cachedData) return;
       const competitors = _cachedData.supervisors.filter(s => !s.no_prizes);
 
-      /* ── Section 1: הקרב הכי חם ── */
-      const ranked = competitors.filter(s => s.points > 0).sort((a, b) => b.points - a.points);
-      let battleHtml;
-      if (ranked.length < 2) {
-        battleHtml = `<div style="font-size:0.85rem;color:var(--muted)">הכול פתוח 🔥</div>`;
+      /* ── Section 1: סה״כ מכירות ── */
+      const fmtComma = n => (n || 0).toLocaleString('en-US');
+      const sales = _cachedData.sales;
+      let salesHtml;
+      if (!sales) {
+        salesHtml = `<div style="font-size:0.85rem;color:var(--muted)">נתונים יעודכנו בקרוב</div>`;
       } else {
-        let minGap = Infinity, idx = 0;
-        for (let i = 0; i < ranked.length - 1; i++) {
-          const g = ranked[i].points - ranked[i+1].points;
-          if (g < minGap) { minGap = g; idx = i; }
-        }
-        const ahead = ranked[idx], behind = ranked[idx + 1];
-        const subLine = minGap === 0
-          ? `תיקו 🔥`
-          : `פער ${minGap === 1 ? 'תיק 1' : minGap + ' תיקים'}`;
-        battleHtml =
-          `<div style="font-size:0.95rem;font-weight:700;color:#fff;margin-bottom:4px">${ahead.name} vs ${behind.name}</div>` +
-          `<div style="font-size:0.82rem;color:var(--muted)">${subLine}</div>`;
+        const rowStyle = `display:grid;grid-template-columns:1fr auto;gap:8px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.04)`;
+        const productRows = (sales.by_product || []).map(p =>
+          `<div style="${rowStyle}">` +
+          `<span style="font-size:0.85rem;color:var(--muted)">${p.label}</span>` +
+          `<span style="font-size:0.85rem;font-weight:700;color:#fff">₪ ${fmtComma(p.amount)}</span>` +
+          `</div>`
+        ).join('');
+        salesHtml =
+          productRows +
+          `<div style="display:grid;grid-template-columns:1fr auto;gap:8px;padding:7px 0 2px;margin-top:2px">` +
+          `<span style="font-size:0.87rem;font-weight:700;color:#fff">סה״כ</span>` +
+          `<span style="font-size:0.95rem;font-weight:800;color:var(--green)">₪ ${fmtComma(sales.total)}</span>` +
+          `</div>` +
+          `<div style="font-size:0.78rem;color:var(--muted);margin-top:10px;text-align:center">🚀 כל תיק נוסף מגדיל את המספר הזה</div>`;
       }
 
       /* ── Section 2: עדיין ישנים ── */
@@ -1058,7 +1061,7 @@
 
       el.innerHTML =
         `<div style="margin-bottom:16px">` +
-          `<div class="sales-title" style="margin-bottom:8px">🥊 הקרב הכי חם</div>${battleHtml}</div>` +
+          `<div class="sales-title" style="margin-bottom:10px">💰 סה״כ מכירות מתחילת המבצע</div>${salesHtml}</div>` +
         `<hr class="sales-divider">` +
         `<div style="margin:14px 0 16px">` +
           `<div class="sales-title" style="margin-bottom:8px">💤 עדיין ישנים..</div>${sleepingHtml}</div>` +
