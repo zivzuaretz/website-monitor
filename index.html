@@ -537,17 +537,18 @@
     }
     .modal-list li { font-size: 0.84rem; color: var(--text); line-height: 1.55; }
     .modal-close-btn {
-      background: none;
+      background: #dc2626;
       border: none;
-      color: var(--muted);
-      font-size: 1rem;
+      color: #fff;
+      font-size: 0.95rem;
+      font-weight: 700;
       cursor: pointer;
-      padding: 4px 8px;
-      border-radius: 6px;
+      padding: 5px 10px;
+      border-radius: 7px;
       line-height: 1;
-      transition: color .15s, background .15s;
+      transition: background .15s, transform .1s;
     }
-    .modal-close-btn:hover { color: var(--text); background: rgba(255,255,255,0.06); }
+    .modal-close-btn:hover { background: #b91c1c; transform: scale(1.07); }
 
     /* ── MODAL ANIMATIONS ───────────────────── */
     @keyframes fadeUp {
