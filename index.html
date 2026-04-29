@@ -1048,22 +1048,10 @@
           `<div style="display:grid;grid-template-columns:1fr auto;gap:8px;padding:7px 0 2px;margin-top:6px">` +
           `<span style="font-size:0.87rem;font-weight:700;color:#fff">סה״כ</span>` +
           `<span style="font-size:1rem;font-weight:800;color:var(--green)">${fmtC(sales.total)}</span>` +
-          `</div>` +
-          `<div style="font-size:0.78rem;color:var(--muted);margin-top:10px;text-align:center">🚀 כל תיק נוסף מגדיל את המספר הזה</div>`;
+          `</div>`;
       }
 
-      /* ── Section 2: עדיין ישנים ── */
-      const sleeping = competitors.filter(s => s.points === 0);
-      let sleepingHtml;
-      if (sleeping.length === 0) {
-        sleepingHtml = `<div style="font-size:0.85rem;color:var(--muted)">כולם בתנועה השבוע 🚀</div>`;
-      } else {
-        const shown = sleeping.slice(0, 3).map(s => s.name).join(' • ');
-        const extra = sleeping.length > 3 ? ` <span style="color:var(--muted)">+${sleeping.length - 3}</span>` : '';
-        sleepingHtml = `<div style="font-size:0.85rem;color:var(--text);line-height:1.7">${shown}${extra}</div>`;
-      }
-
-      /* ── Section 3: מי מוביל בבית ── */
+      /* ── Section 2: מי מוביל בבית ── */
       const teamMap = {};
       for (const s of _cachedData.supervisors) {
         teamMap[s.team] = (teamMap[s.team] || 0) + (s.points || 0);
@@ -1081,29 +1069,26 @@
         const isLeader = i === 0 && diff > 0;
         const src = supervisorImages[name];
         const imgEl = src
-          ? `<img class="avatar-lg${isLeader ? ' modal-leader-glow' : ''}" src="${src}" alt="${name}" onerror="this.style.visibility='hidden'">`
-          : `<div class="avatar-lg${isLeader ? ' modal-leader-glow' : ''}" style="background:var(--card2)"></div>`;
-        return `<div style="display:grid;grid-template-columns:64px 1fr;gap:12px;margin-bottom:18px;align-items:start">` +
+          ? `<img class="avatar-lg${isLeader ? ' modal-leader-glow' : ''}" src="${src}" alt="${name}" style="width:48px;height:48px" onerror="this.style.visibility='hidden'">`
+          : `<div class="avatar-lg${isLeader ? ' modal-leader-glow' : ''}" style="background:var(--card2);width:48px;height:48px"></div>`;
+        return `<div style="display:grid;grid-template-columns:48px 1fr;gap:10px;margin-bottom:12px;align-items:start">` +
           `${imgEl}` +
           `<div>` +
-            `<div style="font-size:0.95rem;font-weight:700;color:#fff;margin-bottom:2px">צוות ${name}</div>` +
-            `<div style="font-size:0.82rem;color:var(--muted);margin-bottom:10px">${pts} נק׳</div>` +
-            `<div style="background:#131829;border-radius:999px;height:9px;overflow:hidden">` +
+            `<div style="font-size:0.85rem;font-weight:700;color:#fff;margin-bottom:2px">צוות ${name}</div>` +
+            `<div style="font-size:0.76rem;color:var(--muted);margin-bottom:8px">${pts} נק׳</div>` +
+            `<div style="background:#131829;border-radius:999px;height:7px;overflow:hidden">` +
               `<div class="modal-bar" data-w="${barW[i]}"></div>` +
             `</div>` +
           `</div></div>`;
       }).join('') +
-        `<div class="modal-verdict" style="font-size:0.82rem;color:var(--gold);text-align:center;margin-top:18px">${verdictText}</div>`;
+        `<div class="modal-verdict" style="font-size:0.78rem;color:var(--gold);text-align:center;margin-top:10px">${verdictText}</div>`;
 
       el.innerHTML =
         `<div style="margin-bottom:16px">` +
           `<div class="sales-title" style="margin-bottom:10px">💰 סה״כ מכירות מתחילת המבצע</div>${salesHtml}</div>` +
         `<hr class="sales-divider">` +
-        `<div style="margin:14px 0 16px">` +
-          `<div class="sales-title" style="margin-bottom:8px">💤 עדיין ישנים..</div>${sleepingHtml}</div>` +
-        `<hr class="sales-divider">` +
-        `<div style="margin-top:14px;background:rgba(245,158,11,0.04);border:1px solid rgba(245,158,11,0.12);border-radius:12px;padding:16px 14px 12px">` +
-          `<div class="sales-title" style="margin-bottom:14px">🏆 מי מוביל בבית?</div>${teamsHtml}</div>`;
+        `<div style="margin-top:12px;background:rgba(245,158,11,0.04);border:1px solid rgba(245,158,11,0.12);border-radius:12px;padding:12px 12px 10px">` +
+          `<div class="sales-title" style="margin-bottom:10px;font-size:0.82rem">🏆 מי מוביל בבית?</div>${teamsHtml}</div>`;
 
       requestAnimationFrame(() => requestAnimationFrame(() => {
         el.querySelectorAll('.modal-bar').forEach(b => { b.style.width = b.dataset.w + '%'; });
