@@ -546,9 +546,29 @@
       padding: 5px 10px;
       border-radius: 7px;
       line-height: 1;
-      transition: background .15s, transform .1s;
+      position: relative;
+      transition: background .2s, transform .15s;
+      animation: closePulse 3s ease-in-out 2s infinite;
     }
-    .modal-close-btn:hover { background: #b91c1c; transform: scale(1.07); }
+    .modal-close-btn:hover { background: #ef4444; transform: scale(1.08); }
+    .modal-close-btn::after {
+      content: 'סגור להצגת הדשבורד';
+      position: absolute;
+      bottom: calc(100% + 7px);
+      right: 0;
+      background: rgba(10,15,28,0.95);
+      color: #e2e8f0;
+      font-size: 0.72rem;
+      font-weight: 500;
+      white-space: nowrap;
+      padding: 5px 10px;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.1);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s ease;
+    }
+    .modal-close-btn:hover::after { opacity: 1; }
 
     /* ── MODAL ANIMATIONS ───────────────────── */
     @keyframes fadeUp {
@@ -620,6 +640,7 @@
       .modal-close-btn {
         animation: closePulse 1.5s ease-in-out 1.2s infinite;
       }
+      .modal-close-btn::after { display: none; }
       .modal-close-hint { display: block; }
     }
   </style>
