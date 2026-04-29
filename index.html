@@ -1081,6 +1081,20 @@
         if (n >= 1000)    return '₪' + (n / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
         return '₪' + n;
       };
+      const countUp = (el, target, ms) => {
+        if (!target || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          el.textContent = fmtC(target); return;
+        }
+        const t0 = performance.now();
+        const ease = t => 1 - Math.pow(1 - t, 3);
+        const step = now => {
+          const p = Math.min((now - t0) / ms, 1);
+          el.textContent = fmtC(Math.round(target * ease(p)));
+          if (p < 1) requestAnimationFrame(step);
+          else el.textContent = fmtC(target);
+        };
+        requestAnimationFrame(step);
+      };
       const sales = _cachedData.sales;
       let salesHtml;
       if (!sales) {
@@ -1110,7 +1124,7 @@
               ).join('');
             return `<div style="${rowStyle}">` +
               `<span style="font-size:0.85rem;font-weight:700;color:#fff">צוות ${team}</span>` +
-              `<span style="font-size:0.85rem;font-weight:700;color:#fff">${fmtC(amt)}</span>` +
+              `<span style="font-size:0.85rem;font-weight:700;color:#fff" data-countup="${amt}">${fmtC(amt)}</span>` +
               `</div>` + members;
           }).join('');
         const productRows = (sales.by_product || []).filter(p => p.amount > 0).map(p =>
@@ -1127,7 +1141,7 @@
           productSection +
           `<div style="display:grid;grid-template-columns:1fr auto;gap:8px;padding:7px 0 2px;margin-top:6px">` +
           `<span style="font-size:0.87rem;font-weight:700;color:#fff">סה״כ</span>` +
-          `<span style="font-size:1rem;font-weight:800;color:var(--green)">${fmtC(sales.total)}</span>` +
+          `<span id="popup-sales-total" style="font-size:1rem;font-weight:800;color:var(--green)">${fmtC(sales.total)}</span>` +
           `</div>`;
       }
 
@@ -1173,6 +1187,13 @@
       requestAnimationFrame(() => requestAnimationFrame(() => {
         el.querySelectorAll('.modal-bar').forEach(b => { b.style.width = b.dataset.w + '%'; });
       }));
+      requestAnimationFrame(() => {
+        const totalEl = el.querySelector('#popup-sales-total');
+        if (totalEl && sales) countUp(totalEl, sales.total, 1500);
+        el.querySelectorAll('[data-countup]').forEach(span => {
+          countUp(span, +span.dataset.countup, 1200);
+        });
+      });
     }
 
     _modalRefresh = renderModal;
