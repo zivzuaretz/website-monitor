@@ -1124,7 +1124,7 @@
               ).join('');
             return `<div style="${rowStyle}">` +
               `<span style="font-size:0.85rem;font-weight:700;color:#fff">צוות ${team}</span>` +
-              `<span style="font-size:0.85rem;font-weight:700;color:#fff" data-countup="${amt}">${fmtC(amt)}</span>` +
+              `<span style="font-size:0.85rem;font-weight:700;color:${amt === 0 ? '#ef4444' : '#fff'}" data-countup="${amt}">${fmtC(amt)}</span>` +
               `</div>` + members;
           }).join('');
         const productRows = (sales.by_product || []).filter(p => p.amount > 0).map(p =>
