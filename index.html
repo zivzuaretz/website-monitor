@@ -1013,16 +1013,26 @@
           const t = supTeamMap[s.name];
           if (t) teamAmts[t] = (teamAmts[t] || 0) + (s.amount || 0);
         }
-        const teamLabels = { 'זיו זוארץ': 'צוות זיו', 'אורון בן חמו': 'צוות אורון בן חמו' };
         const rowStyle = `display:grid;grid-template-columns:1fr auto;gap:8px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.04)`;
+        const supAmtMap = {};
+        for (const s of (sales.by_supervisor || [])) supAmtMap[s.name] = s.amount || 0;
         const teamRows = Object.entries(teamAmts)
           .sort((a, b) => b[1] - a[1])
-          .map(([team, amt]) =>
-            `<div style="${rowStyle}">` +
-            `<span style="font-size:0.85rem;color:var(--muted)">${teamLabels[team] || team}</span>` +
-            `<span style="font-size:0.85rem;font-weight:700;color:#fff">${fmtC(amt)}</span>` +
-            `</div>`
-          ).join('');
+          .map(([team, amt]) => {
+            const members = (sales.by_supervisor || [])
+              .filter(s => supTeamMap[s.name] === team && s.amount > 0)
+              .sort((a, b) => b.amount - a.amount)
+              .map(s =>
+                `<div style="display:grid;grid-template-columns:1fr auto;gap:8px;padding:2px 0 2px 8px">` +
+                `<span style="font-size:0.78rem;color:var(--muted)">${s.name}</span>` +
+                `<span style="font-size:0.78rem;color:var(--muted)">${fmtC(s.amount)}</span>` +
+                `</div>`
+              ).join('');
+            return `<div style="${rowStyle}">` +
+              `<span style="font-size:0.85rem;font-weight:700;color:#fff">צוות ${team}</span>` +
+              `<span style="font-size:0.85rem;font-weight:700;color:#fff">${fmtC(amt)}</span>` +
+              `</div>` + members;
+          }).join('');
         salesHtml =
           teamRows +
           `<div style="display:grid;grid-template-columns:1fr auto;gap:8px;padding:7px 0 2px;margin-top:2px">` +
