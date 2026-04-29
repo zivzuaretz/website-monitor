@@ -613,7 +613,16 @@
       .prizes-cols { grid-template-columns: 1fr; }
       .prize-col   { border-right: none; border-bottom: 1px solid var(--border); }
       .prize-col:last-child { border-bottom: none; }
-      .phase-row   { grid-template-columns: 1fr; }
+      /* phase row stays 2-col on mobile — compact pills */
+      .phase-row { grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+      .phase-pill { padding: 10px 10px; flex-direction: column; align-items: stretch; gap: 3px; }
+      .phase-icon { font-size: 1.1rem; margin-bottom: 1px; }
+      .phase-name { font-size: 0.8rem; }
+      .phase-date { font-size: 0.62rem; margin-top: 1px; }
+      .phase-tag  { margin-right: 0; align-self: flex-start; font-size: 0.6rem; padding: 2px 7px; order: -1; margin-bottom: 3px; }
+      .countdown  { margin-top: 6px; padding: 5px 8px; gap: 3px; flex-direction: column; align-items: center; justify-content: center; }
+      .countdown .cd-num   { font-size: 1.2rem; }
+      .countdown .cd-label { display: none; }
 
       /* ── MOBILE POPUP ── */
       #modal-overlay {
