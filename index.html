@@ -1033,9 +1033,19 @@
               `<span style="font-size:0.85rem;font-weight:700;color:#fff">${fmtC(amt)}</span>` +
               `</div>` + members;
           }).join('');
+        const productRows = (sales.by_product || []).filter(p => p.amount > 0).map(p =>
+          `<div style="${rowStyle}">` +
+          `<span style="font-size:0.85rem;color:var(--muted)">${p.label}</span>` +
+          `<span style="font-size:0.85rem;font-weight:700;color:#fff">${fmtC(p.amount)}</span>` +
+          `</div>`
+        ).join('');
+        const productSection = productRows
+          ? `<div style="font-size:0.72rem;color:var(--muted);margin:10px 0 4px;letter-spacing:0.04em">לפי מוצר</div>` + productRows
+          : '';
         salesHtml =
           teamRows +
-          `<div style="display:grid;grid-template-columns:1fr auto;gap:8px;padding:7px 0 2px;margin-top:2px">` +
+          productSection +
+          `<div style="display:grid;grid-template-columns:1fr auto;gap:8px;padding:7px 0 2px;margin-top:6px">` +
           `<span style="font-size:0.87rem;font-weight:700;color:#fff">סה״כ</span>` +
           `<span style="font-size:1rem;font-weight:800;color:var(--green)">${fmtC(sales.total)}</span>` +
           `</div>` +
