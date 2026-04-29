@@ -1098,14 +1098,8 @@
         const step = now => {
           const p = Math.min((now - t0) / ms, 1);
           el.textContent = fmtC(Math.round(target * ease(p)));
-          if (p < 1) {
-            requestAnimationFrame(step);
-          } else {
-            el.textContent = fmtC(target);
-            el.classList.remove('cu-glow');
-            void el.offsetWidth;
-            el.classList.add('cu-glow');
-          }
+          if (p < 1) requestAnimationFrame(step);
+          else el.textContent = fmtC(target);
         };
         requestAnimationFrame(step);
       };
@@ -1200,6 +1194,16 @@
         el.querySelectorAll('[data-countup]').forEach(span => {
           countUp(span, +span.dataset.countup, itemMs);
         });
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          setTimeout(() => {
+            const glowEls = [];
+            if (totalEl && sales && sales.total) glowEls.push(totalEl);
+            el.querySelectorAll('[data-countup]').forEach(span => {
+              if (+span.dataset.countup) glowEls.push(span);
+            });
+            glowEls.forEach(e => { e.classList.remove('cu-glow'); void e.offsetWidth; e.classList.add('cu-glow'); });
+          }, totalMs + 16);
+        }
       });
     }
 
