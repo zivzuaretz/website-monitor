@@ -995,24 +995,39 @@
       const competitors = _cachedData.supervisors.filter(s => !s.no_prizes);
 
       /* ── Section 1: סה״כ מכירות ── */
-      const fmtComma = n => (n || 0).toLocaleString('en-US');
+      const fmtC = n => {
+        if (!n) return '₪0';
+        if (n >= 1000000) return '₪' + (n / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+        if (n >= 1000)    return '₪' + (n / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
+        return '₪' + n;
+      };
       const sales = _cachedData.sales;
       let salesHtml;
       if (!sales) {
         salesHtml = `<div style="font-size:0.85rem;color:var(--muted)">נתונים יעודכנו בקרוב</div>`;
       } else {
+        const supTeamMap = {};
+        for (const s of _cachedData.supervisors) supTeamMap[s.name] = s.team;
+        const teamAmts = {};
+        for (const s of (sales.by_supervisor || [])) {
+          const t = supTeamMap[s.name];
+          if (t) teamAmts[t] = (teamAmts[t] || 0) + (s.amount || 0);
+        }
+        const teamLabels = { 'זיו זוארץ': 'צוות זיו', 'אורון בן חמו': 'צוות אורון בן חמו' };
         const rowStyle = `display:grid;grid-template-columns:1fr auto;gap:8px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.04)`;
-        const productRows = (sales.by_product || []).map(p =>
-          `<div style="${rowStyle}">` +
-          `<span style="font-size:0.85rem;color:var(--muted)">${p.label}</span>` +
-          `<span style="font-size:0.85rem;font-weight:700;color:#fff">₪ ${fmtComma(p.amount)}</span>` +
-          `</div>`
-        ).join('');
+        const teamRows = Object.entries(teamAmts)
+          .sort((a, b) => b[1] - a[1])
+          .map(([team, amt]) =>
+            `<div style="${rowStyle}">` +
+            `<span style="font-size:0.85rem;color:var(--muted)">${teamLabels[team] || team}</span>` +
+            `<span style="font-size:0.85rem;font-weight:700;color:#fff">${fmtC(amt)}</span>` +
+            `</div>`
+          ).join('');
         salesHtml =
-          productRows +
+          teamRows +
           `<div style="display:grid;grid-template-columns:1fr auto;gap:8px;padding:7px 0 2px;margin-top:2px">` +
           `<span style="font-size:0.87rem;font-weight:700;color:#fff">סה״כ</span>` +
-          `<span style="font-size:0.95rem;font-weight:800;color:var(--green)">₪ ${fmtComma(sales.total)}</span>` +
+          `<span style="font-size:1rem;font-weight:800;color:var(--green)">${fmtC(sales.total)}</span>` +
           `</div>` +
           `<div style="font-size:0.78rem;color:var(--muted);margin-top:10px;text-align:center">🚀 כל תיק נוסף מגדיל את המספר הזה</div>`;
       }
