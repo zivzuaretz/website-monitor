@@ -1,5 +1,5 @@
 {
-  "refresh_date": "2026-05-03T11:06:28+03:00",
+  "refresh_date": "2026-05-03T12:54:53+03:00",
   "phase": 1,
   "group_target": 80,
   "team_managers": [
@@ -19,14 +19,14 @@
     { "name": "ילנה דזורוב",       "team": "אורון בן חמו", "points": 0, "x2_count": 0, "league": null, "rank_change": 0, "weekly_new": 0, "no_prizes": false }
   ],
   "sales": {
-    "total": 12300000,
+    "total": 16800000,
     "by_product": [
       { "label": "גמל",            "amount": 1800000 },
       { "label": "פנסיה",          "amount": 6900000 },
-      { "label": "קצבה מיידית",   "amount": 3600000 }
+      { "label": "קצבה מיידית",   "amount": 8100000 }
     ],
     "by_supervisor": [
-      { "name": "זיו זוארץ",       "amount": 5000000 },
+      { "name": "זיו זוארץ",       "amount": 9500000 },
       { "name": "גל גבאי",         "amount": 2400000 },
       { "name": "עדי להב",          "amount": 0 },
       { "name": "באנצ׳י בירוק",   "amount": 0 },
