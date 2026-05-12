@@ -798,7 +798,7 @@
 <div id="modal-overlay">
   <div class="lb-card" id="modal-box">
     <div class="lb-head">
-      <span class="lb-head-title" id="modal-title">🚀 שבוע שני למבצע</span>
+      <span class="lb-head-title" id="modal-title">📊 8 תיקים מתחילת מאי</span>
       <button class="modal-close-btn" id="modal-close" aria-label="סגור">✕</button>
     </div>
     <div style="padding:20px 24px 24px" id="modal-content"></div>
@@ -1061,15 +1061,6 @@
       ${bySup ? `<div class="sales-row" style="margin-top:4px">${bySup}</div>` : ''}`;
   }
 
-  /* popup week title — auto-updates every week */
-  (function() {
-    const ORDINALS = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שביעי','שמיני','תשיעי','עשירי'];
-    const START    = new Date('2026-04-21');
-    const week     = Math.floor((Date.now() - START) / (7 * 864e5)) + 1;
-    const label    = ORDINALS[week - 1] || ('ה-' + week);
-    const el       = document.getElementById('modal-title');
-    if (el) el.textContent = `🚀 שבוע ${label} למבצע`;
-  })();
 
   render().catch(err => {
     console.error(err);
