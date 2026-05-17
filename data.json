@@ -1,5 +1,5 @@
 {
-  "refresh_date": "2026-05-17T15:40:19+03:00",
+  "refresh_date": "2026-05-17T17:49:09+03:00",
   "phase": 1,
   "group_target": 80,
   "team_managers": [
@@ -15,8 +15,8 @@
     { "name": "נתיב לוגסי",        "team": "זיו זוארץ",    "points": 4, "x2_count": 0, "league": null, "rank_change": 0, "weekly_new": 4, "no_prizes": true  },
     { "name": "אילן גמליאל",      "team": "אורון בן חמו", "points": 4, "x2_count": 2, "league": null, "rank_change": 0, "weekly_new": 2, "no_prizes": false },
     { "name": "חגי אביטן",        "team": "אורון בן חמו", "points": 0, "x2_count": 0, "league": null, "rank_change": 0, "weekly_new": 0, "no_prizes": false },
-    { "name": "הילה לוי סוויסה",  "team": "אורון בן חמו", "points": 0, "x2_count": 0, "league": null, "rank_change": 0, "weekly_new": 0, "no_prizes": false },
-    { "name": "ילנה דזורוב",       "team": "אורון בן חמו", "points": 0, "x2_count": 0, "league": null, "rank_change": 0, "weekly_new": 0, "no_prizes": false }
+    { "name": "הילה לוי סוויסה",  "team": "אורון בן חמו", "points": 2, "x2_count": 1, "league": null, "rank_change": 0, "weekly_new": 1, "no_prizes": false },
+    { "name": "ילנה דרוזדוב",      "team": "אורון בן חמו", "points": 0, "x2_count": 0, "league": null, "rank_change": 0, "weekly_new": 0, "no_prizes": false }
   ],
   "sales": {
     "total": 24900000,
@@ -35,7 +35,7 @@
       { "name": "אילן גמליאל",    "amount": 0 },
       { "name": "חגי אביטן",      "amount": 0 },
       { "name": "הילה לוי סוויסה","amount": 0 },
-      { "name": "ילנה דזורוב",     "amount": 0 }
+      { "name": "ילנה דרוזדוב",    "amount": 0 }
     ]
   }
 }
