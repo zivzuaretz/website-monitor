@@ -1,5 +1,5 @@
 {
-  "refresh_date": "2026-05-19T13:28:34+03:00",
+  "refresh_date": "2026-05-20T09:02:13+03:00",
   "phase": 1,
   "group_target": 80,
   "team_managers": [
@@ -8,7 +8,7 @@
   ],
   "supervisors": [
     { "name": "זיו זוארץ",        "team": "זיו זוארץ",    "points": 8, "x2_count": 1, "league": null, "rank_change": 0, "weekly_new": 7, "no_prizes": true  },
-    { "name": "גל גבאי",          "team": "זיו זוארץ",    "points": 19, "x2_count": 5, "league": null, "rank_change": 0, "weekly_new": 14, "no_prizes": false },
+    { "name": "גל גבאי",          "team": "זיו זוארץ",    "points": 21, "x2_count": 6, "league": null, "rank_change": 0, "weekly_new": 15, "no_prizes": false },
     { "name": "עדי להב",           "team": "זיו זוארץ",    "points": 0, "x2_count": 0, "league": null, "rank_change": 0, "weekly_new": 0, "no_prizes": false },
     { "name": "באנצ׳י בירוק",     "team": "זיו זוארץ",    "points": 13, "x2_count": 4, "league": null, "rank_change": 0, "weekly_new": 9, "no_prizes": false },
     { "name": "אופיר בגיזדה",     "team": "זיו זוארץ",    "points": 3, "x2_count": 1, "league": null, "rank_change": 0, "weekly_new": 2, "no_prizes": false },
