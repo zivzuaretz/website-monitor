@@ -1192,8 +1192,7 @@
         const hungryRows = (list) => list.map((s, i) => {
           const isWinner = s.name === 'גל גבאי';
           const badge = isWinner
-            ? `<div style="font-size:0.72rem;font-weight:700;color:var(--gold);margin-top:4px">👑 זוכה פרס ביניים</div>` +
-              `<div style="font-size:0.72rem;font-weight:600;color:var(--gold);opacity:0.8;margin-top:2px">🎁 BuyMe ₪1,000</div>`
+            ? `<div style="font-size:0.72rem;font-weight:700;color:var(--gold);margin-top:4px">זוכה ב-1000₪ BuyMe 💪🏽</div>`
             : '';
           return `<div style="text-align:center;padding:${isWinner?'8px':'5px'} 0;border-bottom:1px solid rgba(255,255,255,0.05)">` +
             `<div style="font-size:0.85rem;font-weight:700;color:#fff">${medals[i] || ''} ${s.name}</div>` +
