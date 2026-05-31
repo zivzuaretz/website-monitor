@@ -1,5 +1,5 @@
 {
-  "refresh_date": "2026-05-31T13:14:56+03:00",
+  "refresh_date": "2026-05-31T16:17:17+03:00",
   "phase": 1,
   "group_target": 80,
   "team_managers": [
@@ -10,7 +10,7 @@
     { "name": "זיו זוארץ",        "team": "זיו זוארץ",    "points": 10, "x2_count": 1, "league": null, "rank_change": 0, "weekly_new": 9, "no_prizes": true  },
     { "name": "גל גבאי",          "team": "זיו זוארץ",    "points": 24, "x2_count": 7, "league": null, "rank_change": 0, "weekly_new": 17, "no_prizes": false },
     { "name": "עדי להב",           "team": "זיו זוארץ",    "points": 0, "x2_count": 0, "league": null, "rank_change": 0, "weekly_new": 0, "no_prizes": false },
-    { "name": "באנצ׳י בירוק",     "team": "זיו זוארץ",    "points": 19, "x2_count": 7, "league": null, "rank_change": 0, "weekly_new": 12, "no_prizes": false },
+    { "name": "באנצ׳י בירוק",     "team": "זיו זוארץ",    "points": 20, "x2_count": 7, "league": null, "rank_change": 0, "weekly_new": 13, "no_prizes": false },
     { "name": "אופיר בגיזדה",     "team": "זיו זוארץ",    "points": 9, "x2_count": 4, "league": null, "rank_change": 0, "weekly_new": 5, "no_prizes": false },
     { "name": "נתיב לוגסי",        "team": "זיו זוארץ",    "points": 4, "x2_count": 0, "league": null, "rank_change": 0, "weekly_new": 4, "no_prizes": true  },
     { "name": "אילן גמליאל",      "team": "אורון בן חמו", "points": 10, "x2_count": 5, "league": null, "rank_change": 0, "weekly_new": 5, "no_prizes": false },
