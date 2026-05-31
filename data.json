@@ -1,5 +1,5 @@
 {
-  "refresh_date": "2026-05-31T11:02:57+03:00",
+  "refresh_date": "2026-05-31T13:09:50+03:00",
   "phase": 1,
   "group_target": 80,
   "team_managers": [
@@ -15,7 +15,7 @@
     { "name": "נתיב לוגסי",        "team": "זיו זוארץ",    "points": 4, "x2_count": 0, "league": null, "rank_change": 0, "weekly_new": 4, "no_prizes": true  },
     { "name": "אילן גמליאל",      "team": "אורון בן חמו", "points": 10, "x2_count": 5, "league": null, "rank_change": 0, "weekly_new": 5, "no_prizes": false },
     { "name": "חגי אביטן",        "team": "אורון בן חמו", "points": 2, "x2_count": 1, "league": null, "rank_change": 0, "weekly_new": 1, "no_prizes": false },
-    { "name": "הילה לוי סוויסה",  "team": "אורון בן חמו", "points": 2, "x2_count": 1, "league": null, "rank_change": 0, "weekly_new": 1, "no_prizes": false },
+    { "name": "הילה לוי סוויסה",  "team": "אורון בן חמו", "points": 4, "x2_count": 2, "league": null, "rank_change": 0, "weekly_new": 2, "no_prizes": false },
     { "name": "ילנה דרוזדוב",      "team": "אורון בן חמו", "points": 2, "x2_count": 1, "league": null, "rank_change": 0, "weekly_new": 1, "no_prizes": false }
   ],
   "sales": {
