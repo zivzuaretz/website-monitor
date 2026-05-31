@@ -739,11 +739,6 @@
     <!-- JS renders -->
   </div>
 
-  <!-- HALL OF FAME -->
-  <div class="section-label" id="hof-label" style="display:none">🏆 היכל התהילה — שלב א׳</div>
-  <div class="hof-card" id="hof-card" style="display:none"><!-- JS renders --></div>
-  <div style="height:20px" id="hof-spacer" style="display:none"></div>
-
   <!-- LEADERBOARD -->
   <div class="section-label">דירוג מפקחים</div>
   <div class="lb-card">
@@ -890,7 +885,15 @@
     if (_modalRefresh) _modalRefresh();
     const phase   = data.phase || 1;
     const target  = data.group_target || 80;
-    const sups    = [...data.supervisors].sort((a, b) => b.points - a.points);
+    const _lo = { hungry: 0, tired: 1, warming: 1 };
+    const sups = [...data.supervisors].sort((a, b) => {
+      if (phase === 2) {
+        const la = a.no_prizes ? 99 : (_lo[a.league] ?? 1);
+        const lb = b.no_prizes ? 99 : (_lo[b.league] ?? 1);
+        if (la !== lb) return la - lb;
+      }
+      return (b.points || 0) - (a.points || 0);
+    });
     const total   = sups.reduce((s, x) => s + (x.totalCases !== undefined ? x.totalCases : (x.points || 0) - (x.x2_count || 0)), 0);
 
     /* refresh date */
@@ -1040,25 +1043,6 @@
       teams[s.team].members.push(s.name);
     }
 
-    /* Hall of Fame (phase 2 only) */
-    const hofCard  = document.getElementById('hof-card');
-    const hofLabel = document.getElementById('hof-label');
-    const hofSpacer = document.getElementById('hof-spacer');
-    if (phase === 2 && hofCard) {
-      hofLabel.style.display = '';
-      hofCard.style.display  = '';
-      hofSpacer.style.display = '';
-      const comps = data.supervisors.filter(s => !s.no_prizes);
-      const sorted = [...comps].sort((a, b) => (b.stageAPoints || 0) - (a.stageAPoints || 0));
-      const medals = ['🥇', '🥈', '🥉'];
-      hofCard.innerHTML = sorted.slice(0, 3).map((s, i) =>
-        `<div class="hof-row">` +
-          `<span class="hof-medal">${medals[i]}</span>` +
-          `<span class="hof-name">${s.name}</span>` +
-          `<span class="hof-pts">${s.stageAPoints || 0} נק׳ שלב א׳</span>` +
-        `</div>`
-      ).join('');
-    }
     const teamMgrs = data.team_managers || [];
     document.getElementById('teams-grid').innerHTML =
       Object.entries(teams).map(([mgr, t]) => {
@@ -1151,88 +1135,110 @@
       if (cd) cd.textContent = getCountdown();
     }
 
-    function getStageBCountdown() {
-      const target = new Date('2026-07-01T00:00:00+03:00');
-      const diff = target - new Date();
-      if (diff <= 0) return { days: 0, hours: 0, minutes: 0 };
-      const days    = Math.floor(diff / 86400000);
-      const hours   = Math.floor((diff % 86400000) / 3600000);
-      const minutes = Math.floor((diff % 3600000) / 60000);
-      return { days, hours, minutes };
-    }
-    function updateStageBCountdown() {
-      const el = document.getElementById('stageb-countdown');
-      if (!el) return;
-      const { days, hours, minutes } = getStageBCountdown();
-      el.innerHTML =
-        `<span>${days} <small>ימים</small></span>` +
-        `<span style="color:var(--muted);margin:0 4px">·</span>` +
-        `<span>${hours} <small>שעות</small></span>` +
-        `<span style="color:var(--muted);margin:0 4px">·</span>` +
-        `<span>${minutes} <small>דקות</small></span>`;
+    /* lightweight confetti — fires once on popup open */
+    function launchConfetti() {
+      const canvas = document.createElement('canvas');
+      canvas.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:99999';
+      document.body.appendChild(canvas);
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const ctx = canvas.getContext('2d');
+      const colors = ['#f59e0b','#fbbf24','#ef4444','#22c55e','#a78bfa','#f97316','#fff','#34d399'];
+      const pts = Array.from({ length: 110 }, () => ({
+        x: Math.random() * canvas.width,
+        y: -20 - Math.random() * 100,
+        w: 5 + Math.random() * 7, h: 2 + Math.random() * 4,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        angle: Math.random() * Math.PI * 2,
+        spin: (Math.random() - 0.5) * 0.22,
+        vx: (Math.random() - 0.5) * 2.2,
+        vy: 2.2 + Math.random() * 2.8, alpha: 1
+      }));
+      const t0 = performance.now();
+      const total = 3200, fade = 900;
+      (function tick(now) {
+        const e = now - t0;
+        if (e > total + fade) { canvas.remove(); return; }
+        const ga = e > total - fade ? Math.max(0, 1 - (e - (total - fade)) / fade) : 1;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        pts.forEach(p => {
+          p.x += p.vx; p.y += p.vy; p.vy += 0.04; p.angle += p.spin;
+          if (p.y > canvas.height) { p.y = -10; p.x = Math.random() * canvas.width; }
+          ctx.save(); ctx.globalAlpha = ga;
+          ctx.translate(p.x, p.y); ctx.rotate(p.angle);
+          ctx.fillStyle = p.color; ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+          ctx.restore();
+        });
+        requestAnimationFrame(tick);
+      })(t0);
     }
 
     function renderModal() {
       const el = document.getElementById('modal-content');
       if (!el || !_cachedData) return;
       const phase = _cachedData.phase || 1;
-
       clearInterval(_countdownInterval);
 
       if (phase === 2) {
-        /* ── Stage B transition popup ── */
-        const sups = _cachedData.supervisors.filter(s => !s.no_prizes);
-        const hungry = [...sups].filter(s => s.league === 'hungry').sort((a, b) => (b.stageAPoints || 0) - (a.stageAPoints || 0));
-        const tired  = [...sups].filter(s => s.league !== 'hungry').sort((a, b) => (b.stageAPoints || 0) - (a.stageAPoints || 0));
-        const medals = ['🥇', '🥈', '🥉'];
-        const rowS   = `display:grid;grid-template-columns:24px 1fr auto;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.04)`;
+        launchConfetti();
 
+        const allSups = _cachedData.supervisors;
+        const sups    = allSups.filter(s => !s.no_prizes);
+        const hungry  = [...sups].filter(s => s.league === 'hungry').sort((a, b) => (b.stageAPoints || 0) - (a.stageAPoints || 0));
+        const tired   = [...sups].filter(s => s.league !== 'hungry').sort((a, b) => (b.stageAPoints || 0) - (a.stageAPoints || 0));
+        const medals  = ['🥇','🥈','🥉'];
+
+        /* compact row: medal name | pts | תיקים */
+        const rowS = `display:grid;grid-template-columns:20px 1fr auto auto;align-items:center;gap:6px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.05)`;
         const leagueRows = (list, offset) => list.map((s, i) =>
           `<div style="${rowS}">` +
-            `<span style="font-size:1rem">${medals[offset + i] || ''}</span>` +
-            `<span style="font-size:0.87rem;font-weight:700;color:#fff">${s.name}</span>` +
-            `<span style="font-size:0.78rem;color:var(--gold)">${s.stageAPoints || 0} נק׳</span>` +
+            `<span style="font-size:0.85rem;line-height:1">${medals[offset + i] || ''}</span>` +
+            `<span style="font-size:0.82rem;font-weight:700;color:#fff">${s.name}</span>` +
+            `<span style="font-size:0.75rem;color:var(--gold);white-space:nowrap">${s.stageAPoints || 0} נק׳</span>` +
+            `<span style="font-size:0.75rem;color:var(--muted);white-space:nowrap">${s.totalCases || 0} תיקים</span>` +
           `</div>`
         ).join('');
 
-        const secStyle = `border-radius:12px;padding:12px 14px;margin-bottom:12px`;
-        const { days, hours, minutes } = getStageBCountdown();
+        /* team totals */
+        const teamPts = {}, teamCases = {};
+        for (const s of allSups) {
+          teamPts[s.team]   = (teamPts[s.team]   || 0) + (s.stageAPoints || 0);
+          teamCases[s.team] = (teamCases[s.team] || 0) + (s.totalCases   || 0);
+        }
+        const teamRowS = `display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;padding:4px 0`;
+        const teamRows = Object.entries(teamPts).map(([team, pts]) =>
+          `<div style="${teamRowS}">` +
+            `<span style="font-size:0.8rem;font-weight:700;color:#fff">צוות ${team}</span>` +
+            `<span style="font-size:0.75rem;color:var(--gold)">${pts} נק׳</span>` +
+            `<span style="font-size:0.75rem;color:var(--muted)">${teamCases[team] || 0} תיקים</span>` +
+          `</div>`
+        ).join('');
 
-        el.innerHTML =
-          /* Section 1: hungry league */
-          `<div style="${secStyle};background:rgba(239,68,68,0.07);border:1px solid rgba(239,68,68,0.2)">` +
-            `<div style="font-size:0.82rem;font-weight:700;color:#ef4444;margin-bottom:8px">🏆 ליגת הרעבים</div>` +
-            `${leagueRows(hungry, 0)}` +
-          `</div>` +
-          /* Section 2: tired league */
-          `<div style="${secStyle};background:rgba(148,163,184,0.05);border:1px solid rgba(148,163,184,0.15)">` +
-            `<div style="font-size:0.82rem;font-weight:700;color:#94a3b8;margin-bottom:8px">😴 ליגת העייפים</div>` +
-            `${leagueRows(tired, hungry.length)}` +
-          `</div>` +
-          /* Section 3: Stage B starts */
-          `<div style="${secStyle};background:rgba(34,197,94,0.05);border:1px solid rgba(34,197,94,0.15)">` +
-            `<div style="font-size:0.82rem;font-weight:700;color:var(--green);margin-bottom:10px">🚀 שלב ב׳ מתחיל עכשיו</div>` +
-            `<div style="display:flex;flex-direction:column;gap:5px;margin-bottom:10px">` +
-              `<div style="font-size:0.82rem;color:#fff">✅ הניקוד האישי אופס</div>` +
-              `<div style="font-size:0.82rem;color:#fff">✅ מספר התיקים נשמר</div>` +
-              `<div style="font-size:0.82rem;color:#fff">✅ הניקוד הצוותי נשמר</div>` +
-              `<div style="font-size:0.82rem;color:#fff">✅ הליגות קבועות עד סוף המבצע</div>` +
-            `</div>` +
-            `<div style="font-size:0.78rem;color:var(--muted);line-height:1.6">🔥 הנקודות התאפסו.<br>הליגות נשארו.<br>עכשיו נראה מי באמת רעב.</div>` +
-          `</div>` +
-          /* Section 4: countdown to end of Stage B */
-          `<div style="${secStyle};background:rgba(99,102,241,0.06);border:1px solid rgba(99,102,241,0.18);margin-bottom:0;text-align:center">` +
-            `<div style="font-size:0.82rem;font-weight:700;color:#818cf8;margin-bottom:8px">⏳ ספירה לאחור לסיום שלב ב׳</div>` +
-            `<div id="stageb-countdown" style="font-size:1.15rem;font-weight:800;color:#fff;display:flex;justify-content:center;gap:2px;align-items:baseline">` +
-              `<span>${days} <small style="font-size:0.65rem;font-weight:400;color:var(--muted)">ימים</small></span>` +
-              `<span style="color:var(--muted);margin:0 4px">·</span>` +
-              `<span>${hours} <small style="font-size:0.65rem;font-weight:400;color:var(--muted)">שעות</small></span>` +
-              `<span style="color:var(--muted);margin:0 4px">·</span>` +
-              `<span>${minutes} <small style="font-size:0.65rem;font-weight:400;color:var(--muted)">דקות</small></span>` +
-            `</div>` +
+        /* monthly cases */
+        const mc = _cachedData.monthlyCases || {};
+        const monthlyHtml =
+          `<div style="display:flex;justify-content:space-around;text-align:center;gap:4px">` +
+            [['אפריל', mc.april || 0], ['מאי', mc.may || 0], ['יוני', mc.june || 0]].map(([label, n]) =>
+              `<div><div style="font-size:1rem;font-weight:800;color:#fff">${n}</div>` +
+              `<div style="font-size:0.7rem;color:var(--muted)">${label}</div></div>`
+            ).join('<div style="color:rgba(255,255,255,0.1);align-self:center">|</div>') +
           `</div>`;
 
-        _countdownInterval = setInterval(updateStageBCountdown, 60000);
+        const sec = (bg, border, content) =>
+          `<div style="border-radius:10px;padding:10px 12px;margin-bottom:10px;background:${bg};border:1px solid ${border}">${content}</div>`;
+        const hdr = (color, text) =>
+          `<div style="font-size:0.78rem;font-weight:700;color:${color};margin-bottom:6px">${text}</div>`;
+
+        el.innerHTML =
+          sec('rgba(239,68,68,0.07)', 'rgba(239,68,68,0.2)',
+            hdr('#ef4444', '🏆 ליגת הרעבים') + leagueRows(hungry, 0)) +
+          sec('rgba(148,163,184,0.05)', 'rgba(148,163,184,0.15)',
+            hdr('#94a3b8', '😴 ליגת העייפים') + leagueRows(tired, hungry.length)) +
+          sec('rgba(245,158,11,0.05)', 'rgba(245,158,11,0.15)',
+            hdr('var(--gold)', '📊 תיקים לפי חודש') + monthlyHtml) +
+          `<div style="border-radius:10px;padding:10px 12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07)">` +
+            hdr('var(--muted)', '🏅 סיכום צוותי — שלב א׳') + teamRows +
+          `</div>`;
       }
     }
 

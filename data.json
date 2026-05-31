@@ -2,6 +2,7 @@
   "refresh_date": "2026-05-31T22:35:23+03:00",
   "phase": 2,
   "group_target": 80,
+  "monthlyCases": { "april": 15, "may": 45, "june": 0 },
   "team_managers": [
     { "name": "זיו זוארץ",    "role": "מנהלת צוות"   },
     { "name": "אורון בן חמו", "role": "מנהל מחלקה"  }
