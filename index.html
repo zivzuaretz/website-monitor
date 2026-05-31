@@ -801,6 +801,10 @@
     </div>
   </div>
 
+  <!-- MONTHLY CASES -->
+  <div class="section-label">תיקים לפי חודש</div>
+  <div id="monthly-card" class="sales-card" style="padding:16px 20px"></div>
+
   <!-- SALES INFO -->
   <div class="section-label">מידע תומך</div>
   <div class="sales-card" id="sales-card"></div>
@@ -950,6 +954,9 @@
     renderPhases();
     setInterval(renderPhases, 60000);
 
+    /* monthly cases */
+    renderMonthlyCases(data.monthlyCases);
+
     /* sales info */
     renderSales(data.sales);
 
@@ -1075,6 +1082,21 @@
     if (n >= 1000000) return (n / 1000000).toFixed(2).replace(/\.?0+$/, '') + 'M ₪';
     if (n >= 1000)    return (n / 1000).toFixed(1).replace(/\.?0+$/, '') + 'K ₪';
     return n.toLocaleString('he-IL') + ' ₪';
+  }
+
+  function renderMonthlyCases(mc) {
+    const el = document.getElementById('monthly-card');
+    if (!el) return;
+    const months = [['אפריל', mc && mc.april != null ? mc.april : 0], ['מאי', mc && mc.may != null ? mc.may : 0], ['יוני', mc && mc.june != null ? mc.june : 0]];
+    el.innerHTML =
+      `<div style="display:flex;justify-content:space-around;text-align:center;gap:8px">` +
+        months.map(([label, n]) =>
+          `<div style="flex:1">` +
+            `<div style="font-size:1.5rem;font-weight:800;color:#fff;line-height:1.1">${n}</div>` +
+            `<div style="font-size:0.72rem;color:var(--muted);margin-top:4px">${label}</div>` +
+          `</div>`
+        ).join(`<div style="width:1px;background:var(--border);margin:4px 0;align-self:stretch"></div>`) +
+      `</div>`;
   }
 
   function renderSales(sales) {
@@ -1205,7 +1227,7 @@
         const tiredRows = (list) =>
           `<div style="display:flex;flex-wrap:wrap;gap:4px 6px;margin-top:2px;justify-content:center">` +
             list.map(s =>
-              `<span style="font-size:0.78rem;color:#94a3b8;background:rgba(148,163,184,0.08);border:1px solid rgba(148,163,184,0.15);border-radius:999px;padding:2px 8px">${s.name}</span>`
+              `<span style="font-size:0.78rem;color:#94a3b8;background:rgba(148,163,184,0.08);border:1px solid rgba(148,163,184,0.15);border-radius:999px;padding:1px 7px">${s.name}</span>`
             ).join('') +
           `</div>`;
 
@@ -1224,16 +1246,6 @@
           `</div>`
         ).join('');
 
-        /* monthly cases */
-        const mc = _cachedData.monthlyCases || {};
-        const monthlyHtml =
-          `<div style="display:flex;justify-content:space-around;text-align:center;gap:4px">` +
-            [['אפריל', mc.april || 0], ['מאי', mc.may || 0], ['יוני', mc.june || 0]].map(([label, n]) =>
-              `<div><div style="font-size:1rem;font-weight:800;color:#fff">${n}</div>` +
-              `<div style="font-size:0.7rem;color:var(--muted)">${label}</div></div>`
-            ).join('<div style="color:rgba(255,255,255,0.1);align-self:center">|</div>') +
-          `</div>`;
-
         const sec = (bg, border, content) =>
           `<div style="border-radius:10px;padding:10px 12px;margin-bottom:10px;background:${bg};border:1px solid ${border}">${content}</div>`;
         const hdr = (color, text) =>
@@ -1247,8 +1259,6 @@
             hdr('#ef4444', '🏆 ליגת הרעבים') + hungryRows(hungry)) +
           sec('rgba(148,163,184,0.05)', 'rgba(148,163,184,0.15)',
             hdr('#94a3b8', '😴 ליגת העייפים') + tiredRows(tired)) +
-          sec('rgba(245,158,11,0.05)', 'rgba(245,158,11,0.15)',
-            hdr('var(--gold)', '📊 תיקים לפי חודש') + monthlyHtml) +
           `<div style="border-radius:10px;padding:10px 12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07)">` +
             hdr('var(--muted)', '🏅 סיכום צוותי — כל תקופת התחרות') + teamRows +
           `</div>`;
