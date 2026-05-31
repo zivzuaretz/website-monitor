@@ -1092,7 +1092,7 @@
       const secsLeft = 86400 - (h * 3600 + m * 60 + s);
       const hLeft = Math.floor(secsLeft / 3600);
       const mLeft = Math.floor((secsLeft % 3600) / 60);
-      return `${hLeft} שעות ${mLeft} דקות`;
+      return `נותרו ${hLeft} שעות ${mLeft} דקות`;
     }
     function updateCountdown() {
       const cd = document.getElementById('phase-countdown');
@@ -1201,7 +1201,7 @@
       el.innerHTML =
         `<div style="text-align:center;padding:10px 14px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.22);border-radius:10px;margin-bottom:12px">` +
           `<div style="font-size:0.82rem;font-weight:700;color:#f87171;margin-bottom:4px">יום אחרון לשלב א ⏳</div>` +
-          `<div id="phase-countdown" style="font-size:1.15rem;font-weight:800;color:#fff;letter-spacing:0.02em">-- שעות -- דקות</div>` +
+          `<div id="phase-countdown" style="font-size:1.15rem;font-weight:800;color:#fff;letter-spacing:0.02em">נותרו -- שעות -- דקות</div>` +
         `</div>` +
         `<div style="margin-top:4px;background:rgba(245,158,11,0.04);border:1px solid rgba(245,158,11,0.12);border-radius:12px;padding:12px 12px 10px">` +
           `<div class="sales-title" style="margin-bottom:10px;font-size:0.82rem">🏆 מי מוביל בבית?</div>${teamsHtml}</div>`;
