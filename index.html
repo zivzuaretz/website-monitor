@@ -325,12 +325,39 @@
       border-top: 1px solid rgba(245,158,11,0.14);
       border-bottom: 1px solid rgba(245,158,11,0.14);
     }
+    .league-sep.tired {
+      background: rgba(148,163,184,0.06);
+      color: #94a3b8;
+      border-top: 1px solid rgba(148,163,184,0.14);
+      border-bottom: 1px solid rgba(148,163,184,0.14);
+    }
     .league-sep .sep-note {
       font-size: 0.65rem;
       font-weight: 400;
       opacity: .55;
       margin-right: 4px;
     }
+
+    /* Hall of Fame */
+    .hof-card {
+      background: linear-gradient(135deg, rgba(245,158,11,0.08) 0%, rgba(251,191,36,0.04) 100%);
+      border: 1px solid rgba(245,158,11,0.25);
+      border-radius: 16px;
+      padding: 16px 20px;
+      margin-bottom: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .hof-row {
+      display: grid;
+      grid-template-columns: 28px 1fr auto;
+      align-items: center;
+      gap: 10px;
+    }
+    .hof-medal { font-size: 1.3rem; text-align: center; }
+    .hof-name  { font-size: 0.9rem; font-weight: 700; color: #fff; }
+    .hof-pts   { font-size: 0.8rem; font-weight: 700; color: var(--gold); }
 
     .sup-row {
       padding: 11px 20px;
@@ -712,6 +739,11 @@
     <!-- JS renders -->
   </div>
 
+  <!-- HALL OF FAME -->
+  <div class="section-label" id="hof-label" style="display:none">🏆 היכל התהילה — שלב א׳</div>
+  <div class="hof-card" id="hof-card" style="display:none"><!-- JS renders --></div>
+  <div style="height:20px" id="hof-spacer" style="display:none"></div>
+
   <!-- LEADERBOARD -->
   <div class="section-label">דירוג מפקחים</div>
   <div class="lb-card">
@@ -798,7 +830,7 @@
 <div id="modal-overlay">
   <div class="lb-card" id="modal-box">
     <div class="lb-head">
-      <span class="lb-head-title" id="modal-title">📊 47 תיקים מתחילת מאי</span>
+      <span class="lb-head-title" id="modal-title">🏁 שלב א׳ הסתיים</span>
       <button class="modal-close-btn" id="modal-close" aria-label="סגור">✕</button>
     </div>
     <div style="padding:20px 24px 24px" id="modal-content"></div>
@@ -859,7 +891,7 @@
     const phase   = data.phase || 1;
     const target  = data.group_target || 80;
     const sups    = [...data.supervisors].sort((a, b) => b.points - a.points);
-    const total   = sups.reduce((s, x) => s + (x.points || 0) - (x.x2_count || 0), 0);
+    const total   = sups.reduce((s, x) => s + (x.totalCases !== undefined ? x.totalCases : (x.points || 0) - (x.x2_count || 0)), 0);
 
     /* refresh date */
     document.getElementById('refresh-label').textContent = fmtDate(data.refresh_date);
@@ -933,21 +965,21 @@
       const rank   = isManager ? null : competitors.indexOf(s) + 1;
       const pts    = s.points || 0;
       const x2     = s.x2_count || 0;
-      const cases  = pts - x2;
+      const cases  = s.totalCases !== undefined ? s.totalCases : (pts - x2);
       const minPct = clamp(Math.round(cases / MIN_TARGET * 100), 0, 100);
       const ok     = cases >= MIN_TARGET;
 
       /* league dividers — only for competitors */
       if (!isManager) {
         let league = s.league;
-        if (!league) league = rank <= 3 ? 'hungry' : 'warming';
+        if (!league) league = rank <= 3 ? 'hungry' : 'tired';
         if (league !== lastLeague) {
           const note = phase === 1 ? '<span class="sep-note">(לפי דירוג נוכחי)</span>' : '';
           const div  = document.createElement('div');
-          div.className = `league-sep ${league}`;
+          div.className = `league-sep ${league === 'warming' ? 'tired' : league}`;
           div.innerHTML  = league === 'hungry'
-            ? `🔥 ליגת הרעבים 💸 ${note}`
-            : `🌡️ ליגת העייפים💤 ${note}`;
+            ? `🏆 ליגת הרעבים ${note}`
+            : `😴 ליגת העייפים ${note}`;
           body.appendChild(div);
           lastLeague = league;
         }
@@ -1000,12 +1032,32 @@
       body.appendChild(row);
     });
 
-    /* teams */
+    /* teams — use stageAPoints in phase 2 so historical totals are preserved */
     const teams = {};
     for (const s of data.supervisors) {
       if (!teams[s.team]) teams[s.team] = { pts: 0, members: [] };
-      teams[s.team].pts += s.points || 0;
+      teams[s.team].pts += phase === 2 ? (s.stageAPoints || 0) : (s.points || 0);
       teams[s.team].members.push(s.name);
+    }
+
+    /* Hall of Fame (phase 2 only) */
+    const hofCard  = document.getElementById('hof-card');
+    const hofLabel = document.getElementById('hof-label');
+    const hofSpacer = document.getElementById('hof-spacer');
+    if (phase === 2 && hofCard) {
+      hofLabel.style.display = '';
+      hofCard.style.display  = '';
+      hofSpacer.style.display = '';
+      const comps = data.supervisors.filter(s => !s.no_prizes);
+      const sorted = [...comps].sort((a, b) => (b.stageAPoints || 0) - (a.stageAPoints || 0));
+      const medals = ['🥇', '🥈', '🥉'];
+      hofCard.innerHTML = sorted.slice(0, 3).map((s, i) =>
+        `<div class="hof-row">` +
+          `<span class="hof-medal">${medals[i]}</span>` +
+          `<span class="hof-name">${s.name}</span>` +
+          `<span class="hof-pts">${s.stageAPoints || 0} נק׳ שלב א׳</span>` +
+        `</div>`
+      ).join('');
     }
     const teamMgrs = data.team_managers || [];
     document.getElementById('teams-grid').innerHTML =
@@ -1099,141 +1151,89 @@
       if (cd) cd.textContent = getCountdown();
     }
 
+    function getStageBCountdown() {
+      const target = new Date('2026-07-01T00:00:00+03:00');
+      const diff = target - new Date();
+      if (diff <= 0) return { days: 0, hours: 0, minutes: 0 };
+      const days    = Math.floor(diff / 86400000);
+      const hours   = Math.floor((diff % 86400000) / 3600000);
+      const minutes = Math.floor((diff % 3600000) / 60000);
+      return { days, hours, minutes };
+    }
+    function updateStageBCountdown() {
+      const el = document.getElementById('stageb-countdown');
+      if (!el) return;
+      const { days, hours, minutes } = getStageBCountdown();
+      el.innerHTML =
+        `<span>${days} <small>ימים</small></span>` +
+        `<span style="color:var(--muted);margin:0 4px">·</span>` +
+        `<span>${hours} <small>שעות</small></span>` +
+        `<span style="color:var(--muted);margin:0 4px">·</span>` +
+        `<span>${minutes} <small>דקות</small></span>`;
+    }
+
     function renderModal() {
       const el = document.getElementById('modal-content');
       if (!el || !_cachedData) return;
-      const competitors = _cachedData.supervisors.filter(s => !s.no_prizes);
-
-      /* ── Section 1: סה״כ מכירות ── */
-      const fmtC = n => {
-        if (!n) return '₪0';
-        if (n >= 1000000) return '₪' + (n / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
-        if (n >= 1000)    return '₪' + (n / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
-        return '₪' + n;
-      };
-      const countUp = (el, target, ms) => {
-        if (!target || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-          el.textContent = fmtC(target); return;
-        }
-        const t0 = performance.now();
-        const ease = t => 1 - Math.pow(1 - t, 3);
-        const step = now => {
-          const p = Math.min((now - t0) / ms, 1);
-          el.textContent = fmtC(Math.round(target * ease(p)));
-          if (p < 1) requestAnimationFrame(step);
-          else el.textContent = fmtC(target);
-        };
-        requestAnimationFrame(step);
-      };
-      const sales = _cachedData.sales;
-      let salesHtml;
-      if (!sales) {
-        salesHtml = `<div style="font-size:0.85rem;color:var(--muted)">נתונים יעודכנו בקרוב</div>`;
-      } else {
-        const supTeamMap = {};
-        for (const s of _cachedData.supervisors) supTeamMap[s.name] = s.team;
-        const teamAmts = {};
-        for (const s of (sales.by_supervisor || [])) {
-          const t = supTeamMap[s.name];
-          if (t) teamAmts[t] = (teamAmts[t] || 0) + (s.amount || 0);
-        }
-        const rowStyle = `display:grid;grid-template-columns:1fr auto;gap:8px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.04)`;
-        const teamRows = Object.entries(teamAmts)
-          .sort((a, b) => b[1] - a[1])
-          .map(([team, amt]) =>
-            `<div style="${rowStyle}">` +
-            `<span style="font-size:0.85rem;font-weight:700;color:#fff">צוות ${team}</span>` +
-            `<span style="font-size:0.85rem;font-weight:700;color:${amt === 0 ? '#ef4444' : 'var(--green)'}" data-countup="${amt}">${fmtC(amt)}</span>` +
-            `</div>`
-          ).join('');
-        const productRows = (sales.by_product || []).filter(p => p.amount > 0).map(p =>
-          `<div style="${rowStyle}">` +
-          `<span style="font-size:0.85rem;color:var(--muted)">${p.label}</span>` +
-          `<span style="font-size:0.85rem;font-weight:700;color:#fff" data-countup="${p.amount}">${fmtC(p.amount)}</span>` +
-          `</div>`
-        ).join('');
-        const productSection = productRows
-          ? `<div style="font-size:0.72rem;color:var(--muted);margin:10px 0 4px;letter-spacing:0.04em">לפי מוצר</div>` + productRows
-          : '';
-        salesHtml =
-          teamRows +
-          productSection +
-          `<div style="display:grid;grid-template-columns:1fr auto;gap:8px;padding:7px 0 2px;margin-top:6px">` +
-          `<span style="font-size:0.87rem;font-weight:700;color:#fff">סה״כ</span>` +
-          `<span id="popup-sales-total" style="font-size:1rem;font-weight:800;color:var(--green)">${fmtC(sales.total)}</span>` +
-          `</div>`;
-      }
-
-      /* ── Section 2: מי מוביל בבית ── */
-      const teamMap = {};
-      const teamCasesMap = {};
-      for (const s of _cachedData.supervisors) {
-        teamMap[s.team] = (teamMap[s.team] || 0) + (s.points || 0);
-        teamCasesMap[s.team] = (teamCasesMap[s.team] || 0) + ((s.points || 0) - (s.x2_count || 0));
-      }
-      const teams   = Object.entries(teamMap).sort((a, b) => b[1] - a[1]);
-      const maxPts  = teams[0]?.[1] || 1;
-      const diff    = teams.length >= 2 ? teams[0][1] - teams[1][1] : 0;
-      const barW    = teams.map((t, i) => i === 0 ? 80 : Math.max(18, Math.round((t[1] / maxPts) * 80)));
-      const genderMap  = { 'זיו זוארץ': 'מובילה', 'אורון בן חמו': 'מוביל' };
-      const leaderName = teams[0]?.[0] || '';
-      const verdictText = diff === 0
-        ? '🔥 הכול פתוח'
-        : `👑 ${leaderName} ${genderMap[leaderName] || 'מוביל/ה'} כרגע`;
-      const teamsHtml = teams.map(([name, pts], i) => {
-        const isLeader = i === 0 && diff > 0;
-        const src = supervisorImages[name];
-        const imgEl = src
-          ? `<img class="avatar-lg${isLeader ? ' modal-leader-glow' : ''}" src="${src}" alt="${name}" style="width:48px;height:48px" onerror="this.style.visibility='hidden'">`
-          : `<div class="avatar-lg${isLeader ? ' modal-leader-glow' : ''}" style="background:var(--card2);width:48px;height:48px"></div>`;
-        return `<div style="display:grid;grid-template-columns:48px 1fr;gap:10px;margin-bottom:12px;align-items:start">` +
-          `${imgEl}` +
-          `<div>` +
-            `<div style="font-size:0.85rem;font-weight:700;color:#fff;margin-bottom:2px">צוות ${name}</div>` +
-            `<div style="font-size:0.76rem;color:var(--muted);margin-bottom:8px">${pts} נק׳ · ${teamCasesMap[name] || 0} תיקים</div>` +
-            `<div style="background:#131829;border-radius:999px;height:7px;overflow:hidden">` +
-              `<div class="modal-bar" data-w="${barW[i]}"></div>` +
-            `</div>` +
-          `</div></div>`;
-      }).join('') +
-        `<div class="modal-verdict" style="font-size:0.78rem;color:var(--gold);text-align:center;margin-top:10px">${verdictText}</div>`;
-
-      el.innerHTML =
-        `<div style="text-align:center;padding:10px 14px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.22);border-radius:10px;margin-bottom:12px">` +
-          `<div style="font-size:0.82rem;font-weight:700;color:#f87171;margin-bottom:4px">יום אחרון לשלב א ⏳</div>` +
-          `<div id="phase-countdown" style="font-size:1.15rem;font-weight:800;color:#fff;letter-spacing:0.02em">נותרו -- שעות -- דקות</div>` +
-        `</div>` +
-        `<div style="margin-top:4px;background:rgba(245,158,11,0.04);border:1px solid rgba(245,158,11,0.12);border-radius:12px;padding:12px 12px 10px">` +
-          `<div class="sales-title" style="margin-bottom:10px;font-size:0.82rem">🏆 מי מוביל בבית?</div>${teamsHtml}</div>`;
+      const phase = _cachedData.phase || 1;
 
       clearInterval(_countdownInterval);
-      updateCountdown();
-      _countdownInterval = setInterval(updateCountdown, 30000);
 
-      requestAnimationFrame(() => requestAnimationFrame(() => {
-        el.querySelectorAll('.modal-bar').forEach(b => { b.style.width = b.dataset.w + '%'; });
-      }));
-      requestAnimationFrame(() => {
-        const isFirst = _modalFirstOpen;
-        _modalFirstOpen = false;
-        const totalMs = isFirst ? 1100 : 500;
-        const itemMs  = isFirst ?  900 : 400;
-        const totalEl = el.querySelector('#popup-sales-total');
-        if (totalEl && sales) countUp(totalEl, sales.total, totalMs);
-        el.querySelectorAll('[data-countup]').forEach(span => {
-          countUp(span, +span.dataset.countup, itemMs);
-        });
-        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-          setTimeout(() => {
-            const glowEls = [];
-            if (totalEl && sales && sales.total) glowEls.push(totalEl);
-            el.querySelectorAll('[data-countup]').forEach(span => {
-              if (+span.dataset.countup) glowEls.push(span);
-            });
-            glowEls.forEach(e => { e.classList.remove('cu-glow'); void e.offsetWidth; e.classList.add('cu-glow'); });
-          }, totalMs + 16);
-        }
-      });
+      if (phase === 2) {
+        /* ── Stage B transition popup ── */
+        const sups = _cachedData.supervisors.filter(s => !s.no_prizes);
+        const hungry = [...sups].filter(s => s.league === 'hungry').sort((a, b) => (b.stageAPoints || 0) - (a.stageAPoints || 0));
+        const tired  = [...sups].filter(s => s.league !== 'hungry').sort((a, b) => (b.stageAPoints || 0) - (a.stageAPoints || 0));
+        const medals = ['🥇', '🥈', '🥉'];
+        const rowS   = `display:grid;grid-template-columns:24px 1fr auto;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.04)`;
+
+        const leagueRows = (list, offset) => list.map((s, i) =>
+          `<div style="${rowS}">` +
+            `<span style="font-size:1rem">${medals[offset + i] || ''}</span>` +
+            `<span style="font-size:0.87rem;font-weight:700;color:#fff">${s.name}</span>` +
+            `<span style="font-size:0.78rem;color:var(--gold)">${s.stageAPoints || 0} נק׳</span>` +
+          `</div>`
+        ).join('');
+
+        const secStyle = `border-radius:12px;padding:12px 14px;margin-bottom:12px`;
+        const { days, hours, minutes } = getStageBCountdown();
+
+        el.innerHTML =
+          /* Section 1: hungry league */
+          `<div style="${secStyle};background:rgba(239,68,68,0.07);border:1px solid rgba(239,68,68,0.2)">` +
+            `<div style="font-size:0.82rem;font-weight:700;color:#ef4444;margin-bottom:8px">🏆 ליגת הרעבים</div>` +
+            `${leagueRows(hungry, 0)}` +
+          `</div>` +
+          /* Section 2: tired league */
+          `<div style="${secStyle};background:rgba(148,163,184,0.05);border:1px solid rgba(148,163,184,0.15)">` +
+            `<div style="font-size:0.82rem;font-weight:700;color:#94a3b8;margin-bottom:8px">😴 ליגת העייפים</div>` +
+            `${leagueRows(tired, hungry.length)}` +
+          `</div>` +
+          /* Section 3: Stage B starts */
+          `<div style="${secStyle};background:rgba(34,197,94,0.05);border:1px solid rgba(34,197,94,0.15)">` +
+            `<div style="font-size:0.82rem;font-weight:700;color:var(--green);margin-bottom:10px">🚀 שלב ב׳ מתחיל עכשיו</div>` +
+            `<div style="display:flex;flex-direction:column;gap:5px;margin-bottom:10px">` +
+              `<div style="font-size:0.82rem;color:#fff">✅ הניקוד האישי אופס</div>` +
+              `<div style="font-size:0.82rem;color:#fff">✅ מספר התיקים נשמר</div>` +
+              `<div style="font-size:0.82rem;color:#fff">✅ הניקוד הצוותי נשמר</div>` +
+              `<div style="font-size:0.82rem;color:#fff">✅ הליגות קבועות עד סוף המבצע</div>` +
+            `</div>` +
+            `<div style="font-size:0.78rem;color:var(--muted);line-height:1.6">🔥 הנקודות התאפסו.<br>הליגות נשארו.<br>עכשיו נראה מי באמת רעב.</div>` +
+          `</div>` +
+          /* Section 4: countdown to end of Stage B */
+          `<div style="${secStyle};background:rgba(99,102,241,0.06);border:1px solid rgba(99,102,241,0.18);margin-bottom:0;text-align:center">` +
+            `<div style="font-size:0.82rem;font-weight:700;color:#818cf8;margin-bottom:8px">⏳ ספירה לאחור לסיום שלב ב׳</div>` +
+            `<div id="stageb-countdown" style="font-size:1.15rem;font-weight:800;color:#fff;display:flex;justify-content:center;gap:2px;align-items:baseline">` +
+              `<span>${days} <small style="font-size:0.65rem;font-weight:400;color:var(--muted)">ימים</small></span>` +
+              `<span style="color:var(--muted);margin:0 4px">·</span>` +
+              `<span>${hours} <small style="font-size:0.65rem;font-weight:400;color:var(--muted)">שעות</small></span>` +
+              `<span style="color:var(--muted);margin:0 4px">·</span>` +
+              `<span>${minutes} <small style="font-size:0.65rem;font-weight:400;color:var(--muted)">דקות</small></span>` +
+            `</div>` +
+          `</div>`;
+
+        _countdownInterval = setInterval(updateStageBCountdown, 60000);
+      }
     }
 
     _modalRefresh = renderModal;
