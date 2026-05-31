@@ -1188,21 +1188,28 @@
         const tired   = [...sups].filter(s => s.league !== 'hungry').sort((a, b) => (b.stageAPoints || 0) - (a.stageAPoints || 0));
         const medals  = ['🥇','🥈','🥉'];
 
-        /* compact row: medal name | pts | תיקים */
+        /* hungry row: medal name | pts | תיקים */
         const rowS = `display:grid;grid-template-columns:20px 1fr auto auto;align-items:center;gap:6px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.05)`;
-        const leagueRows = (list, offset) => list.map((s, i) =>
+        const hungryRows = (list) => list.map((s, i) =>
           `<div style="${rowS}">` +
-            `<span style="font-size:0.85rem;line-height:1">${medals[offset + i] || ''}</span>` +
+            `<span style="font-size:0.85rem;line-height:1">${medals[i] || ''}</span>` +
             `<span style="font-size:0.82rem;font-weight:700;color:#fff">${s.name}</span>` +
             `<span style="font-size:0.75rem;color:var(--gold);white-space:nowrap">${s.stageAPoints || 0} נק׳</span>` +
             `<span style="font-size:0.75rem;color:var(--muted);white-space:nowrap">${s.totalCases || 0} תיקים</span>` +
           `</div>`
         ).join('');
 
-        /* team totals */
+        /* tired row: names only */
+        const tiredRows = (list) => list.map(s =>
+          `<div style="padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.04)">` +
+            `<span style="font-size:0.82rem;font-weight:600;color:#cbd5e1">${s.name}</span>` +
+          `</div>`
+        ).join('');
+
+        /* team totals — cumulative: stageA + stageB */
         const teamPts = {}, teamCases = {};
         for (const s of allSups) {
-          teamPts[s.team]   = (teamPts[s.team]   || 0) + (s.stageAPoints || 0);
+          teamPts[s.team]   = (teamPts[s.team]   || 0) + (s.stageAPoints || 0) + (s.points || 0);
           teamCases[s.team] = (teamCases[s.team] || 0) + (s.totalCases   || 0);
         }
         const teamRowS = `display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;padding:4px 0`;
@@ -1231,13 +1238,13 @@
 
         el.innerHTML =
           sec('rgba(239,68,68,0.07)', 'rgba(239,68,68,0.2)',
-            hdr('#ef4444', '🏆 ליגת הרעבים') + leagueRows(hungry, 0)) +
+            hdr('#ef4444', '🏆 ליגת הרעבים') + hungryRows(hungry)) +
           sec('rgba(148,163,184,0.05)', 'rgba(148,163,184,0.15)',
-            hdr('#94a3b8', '😴 ליגת העייפים') + leagueRows(tired, hungry.length)) +
+            hdr('#94a3b8', '😴 ליגת העייפים') + tiredRows(tired)) +
           sec('rgba(245,158,11,0.05)', 'rgba(245,158,11,0.15)',
             hdr('var(--gold)', '📊 תיקים לפי חודש') + monthlyHtml) +
           `<div style="border-radius:10px;padding:10px 12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07)">` +
-            hdr('var(--muted)', '🏅 סיכום צוותי — שלב א׳') + teamRows +
+            hdr('var(--muted)', '🏅 סיכום צוותי — כל תקופת התחרות') + teamRows +
           `</div>`;
       }
     }
