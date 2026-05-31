@@ -1212,7 +1212,7 @@
         /* team totals — cumulative: stageA + stageB */
         const teamPts = {}, teamCases = {};
         for (const s of allSups) {
-          teamPts[s.team]   = (teamPts[s.team]   || 0) + (s.stageAPoints || 0) + (s.points || 0);
+          teamPts[s.team]   = (teamPts[s.team]   || 0) + (s.stageAPoints || 0) + (s.no_prizes ? 0 : (s.points || 0));
           teamCases[s.team] = (teamCases[s.team] || 0) + (s.totalCases   || 0);
         }
         const teamRowS = `display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05)`;
