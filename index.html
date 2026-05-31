@@ -1071,9 +1071,33 @@
   (function() {
     const overlay  = document.getElementById('modal-overlay');
     const closeBtn = document.getElementById('modal-close');
-    function closeModal() { overlay.classList.add('hidden'); }
+    let _countdownInterval = null;
+    function closeModal() {
+      overlay.classList.add('hidden');
+      clearInterval(_countdownInterval);
+      _countdownInterval = null;
+    }
     closeBtn.addEventListener('click', closeModal);
     overlay.addEventListener('click', function(e) { if (e.target === overlay) closeModal(); });
+
+    function getCountdown() {
+      const now = new Date();
+      const parts = new Intl.DateTimeFormat('en-IL', {
+        timeZone: 'Asia/Jerusalem',
+        hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false
+      }).formatToParts(now);
+      const h = +parts.find(p => p.type === 'hour').value;
+      const m = +parts.find(p => p.type === 'minute').value;
+      const s = +parts.find(p => p.type === 'second').value;
+      const secsLeft = 86400 - (h * 3600 + m * 60 + s);
+      const hLeft = Math.floor(secsLeft / 3600);
+      const mLeft = Math.floor((secsLeft % 3600) / 60);
+      return `${hLeft}:${String(mLeft).padStart(2, '0')}`;
+    }
+    function updateCountdown() {
+      const cd = document.getElementById('phase-countdown');
+      if (cd) cd.textContent = getCountdown();
+    }
 
     function renderModal() {
       const el = document.getElementById('modal-content');
@@ -1175,8 +1199,16 @@
         `<div class="modal-verdict" style="font-size:0.78rem;color:var(--gold);text-align:center;margin-top:10px">${verdictText}</div>`;
 
       el.innerHTML =
+        `<div style="text-align:center;padding:10px 14px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.22);border-radius:10px;margin-bottom:12px">` +
+          `<div style="font-size:0.82rem;font-weight:700;color:#f87171;margin-bottom:4px">יום אחרון לשלב א ⏳</div>` +
+          `<div id="phase-countdown" style="font-size:1.6rem;font-weight:800;color:#fff;letter-spacing:0.06em;font-variant-numeric:tabular-nums">--:--</div>` +
+        `</div>` +
         `<div style="margin-top:4px;background:rgba(245,158,11,0.04);border:1px solid rgba(245,158,11,0.12);border-radius:12px;padding:12px 12px 10px">` +
           `<div class="sales-title" style="margin-bottom:10px;font-size:0.82rem">🏆 מי מוביל בבית?</div>${teamsHtml}</div>`;
+
+      clearInterval(_countdownInterval);
+      updateCountdown();
+      _countdownInterval = setInterval(updateCountdown, 30000);
 
       requestAnimationFrame(() => requestAnimationFrame(() => {
         el.querySelectorAll('.modal-bar').forEach(b => { b.style.width = b.dataset.w + '%'; });
