@@ -1142,8 +1142,10 @@
 
       /* ── Section 2: מי מוביל בבית ── */
       const teamMap = {};
+      const teamCasesMap = {};
       for (const s of _cachedData.supervisors) {
         teamMap[s.team] = (teamMap[s.team] || 0) + (s.points || 0);
+        teamCasesMap[s.team] = (teamCasesMap[s.team] || 0) + ((s.points || 0) - (s.x2_count || 0));
       }
       const teams   = Object.entries(teamMap).sort((a, b) => b[1] - a[1]);
       const maxPts  = teams[0]?.[1] || 1;
@@ -1164,7 +1166,7 @@
           `${imgEl}` +
           `<div>` +
             `<div style="font-size:0.85rem;font-weight:700;color:#fff;margin-bottom:2px">צוות ${name}</div>` +
-            `<div style="font-size:0.76rem;color:var(--muted);margin-bottom:8px">${pts} נק׳</div>` +
+            `<div style="font-size:0.76rem;color:var(--muted);margin-bottom:8px">${pts} נק׳ · ${teamCasesMap[name] || 0} תיקים</div>` +
             `<div style="background:#131829;border-radius:999px;height:7px;overflow:hidden">` +
               `<div class="modal-bar" data-w="${barW[i]}"></div>` +
             `</div>` +
