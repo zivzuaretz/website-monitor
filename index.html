@@ -1193,14 +1193,21 @@
         const nameSizes  = ['1rem',   '0.9rem',  '0.83rem'];
         const medalSizes = ['1.15rem','0.95rem', '0.85rem'];
         const ptsSizes   = ['0.85rem','0.78rem', '0.73rem'];
-        const hungryRows = (list) => list.map((s, i) =>
-          `<div style="display:grid;grid-template-columns:22px 1fr auto auto;align-items:center;gap:6px;padding:${i===0?'6px':'4px'} 0;border-bottom:1px solid rgba(255,255,255,0.05)">` +
+        const hungryRows = (list) => list.map((s, i) => {
+          const isWinner = s.name === 'גל גבאי';
+          const nameCell = isWinner
+            ? `<div style="display:flex;flex-direction:column;gap:2px">` +
+                `<span style="font-size:${nameSizes[i]||'0.8rem'};font-weight:700;color:#fff">${s.name}</span>` +
+                `<span style="font-size:0.68rem;font-weight:600;color:var(--gold);opacity:0.9;white-space:nowrap">🏆 זוכה פרס ביניים שלב א׳ — BuyMe ₪1,000</span>` +
+              `</div>`
+            : `<span style="font-size:${nameSizes[i]||'0.8rem'};font-weight:700;color:#fff">${s.name}</span>`;
+          return `<div style="display:grid;grid-template-columns:22px 1fr auto auto;align-items:center;gap:6px;padding:${i===0?'6px':'4px'} 0;border-bottom:1px solid rgba(255,255,255,0.05)">` +
             `<span style="font-size:${medalSizes[i]||'0.8rem'};line-height:1">${medals[i] || ''}</span>` +
-            `<span style="font-size:${nameSizes[i]||'0.8rem'};font-weight:700;color:#fff">${s.name}</span>` +
+            nameCell +
             `<span style="font-size:${ptsSizes[i]||'0.7rem'};color:var(--gold);white-space:nowrap">${s.stageAPoints || 0} נק׳</span>` +
             `<span style="font-size:${ptsSizes[i]||'0.7rem'};color:var(--muted);white-space:nowrap">${s.totalCases || 0} תיקים</span>` +
-          `</div>`
-        ).join('');
+          `</div>`;
+        }).join('');
 
         /* tired: compact inline chips */
         const tiredRows = (list) =>
