@@ -1191,23 +1191,20 @@
 
         const hungryRows = (list) => list.map((s, i) => {
           const isWinner = s.name === 'גל גבאי';
-          const nameCell = isWinner
-            ? `<div style="display:flex;flex-direction:column;gap:2px">` +
-                `<span style="font-size:0.85rem;font-weight:700;color:#fff">${s.name}</span>` +
-                `<span style="font-size:0.68rem;font-weight:600;color:var(--gold);opacity:0.9;white-space:nowrap">🏆 זוכה פרס ביניים שלב א׳ — BuyMe ₪1,000</span>` +
-              `</div>`
-            : `<span style="font-size:0.85rem;font-weight:700;color:#fff">${s.name}</span>`;
-          return `<div style="display:grid;grid-template-columns:22px 1fr auto auto;align-items:center;gap:6px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.05)">` +
-            `<span style="font-size:0.85rem;line-height:1">${medals[i] || ''}</span>` +
-            nameCell +
-            `<span style="font-size:0.78rem;color:var(--gold);white-space:nowrap">${s.stageAPoints || 0} נק׳</span>` +
-            `<span style="font-size:0.78rem;color:var(--muted);white-space:nowrap">${s.totalCases || 0} תיקים</span>` +
+          const badge = isWinner
+            ? `<div style="font-size:0.72rem;font-weight:700;color:var(--gold);margin-top:4px">👑 זוכה פרס ביניים</div>` +
+              `<div style="font-size:0.72rem;font-weight:600;color:var(--gold);opacity:0.8;margin-top:2px">🎁 BuyMe ₪1,000</div>`
+            : '';
+          return `<div style="text-align:center;padding:${isWinner?'8px':'5px'} 0;border-bottom:1px solid rgba(255,255,255,0.05)">` +
+            `<div style="font-size:0.85rem;font-weight:700;color:#fff">${medals[i] || ''} ${s.name}</div>` +
+            badge +
+            `<div style="font-size:0.75rem;color:var(--muted);margin-top:${isWinner?'6px':'3px'}">${s.stageAPoints || 0} נק׳ | ${s.totalCases || 0} תיקים</div>` +
           `</div>`;
         }).join('');
 
-        /* tired: compact inline chips */
+        /* tired: compact inline chips, centered */
         const tiredRows = (list) =>
-          `<div style="display:flex;flex-wrap:wrap;gap:4px 6px;margin-top:2px">` +
+          `<div style="display:flex;flex-wrap:wrap;gap:4px 6px;margin-top:2px;justify-content:center">` +
             list.map(s =>
               `<span style="font-size:0.78rem;color:#94a3b8;background:rgba(148,163,184,0.08);border:1px solid rgba(148,163,184,0.15);border-radius:999px;padding:2px 8px">${s.name}</span>`
             ).join('') +
@@ -1219,7 +1216,7 @@
           teamPts[s.team]   = (teamPts[s.team]   || 0) + (s.stageAPoints || 0) + (s.no_prizes ? 0 : (s.points || 0));
           teamCases[s.team] = (teamCases[s.team] || 0) + (s.totalCases   || 0);
         }
-        const teamRowS = `display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05)`;
+        const teamRowS = `display:flex;justify-content:center;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05)`;
         const teamRows = Object.entries(teamPts).map(([team, pts]) =>
           `<div style="${teamRowS}">` +
             `<span style="font-size:0.9rem;font-weight:700;color:#fff">צוות ${team}</span>` +
@@ -1241,7 +1238,10 @@
         const sec = (bg, border, content) =>
           `<div style="border-radius:10px;padding:10px 12px;margin-bottom:10px;background:${bg};border:1px solid ${border}">${content}</div>`;
         const hdr = (color, text) =>
-          `<div style="font-size:0.78rem;font-weight:700;color:${color};margin-bottom:6px">${text}</div>`;
+          `<div style="font-size:0.78rem;font-weight:700;color:${color};margin-bottom:6px;text-align:center">${text}</div>`;
+
+        const titleEl = document.getElementById('modal-title');
+        if (titleEl) { titleEl.style.flex = '1'; titleEl.style.textAlign = 'center'; }
 
         el.innerHTML =
           sec('rgba(239,68,68,0.07)', 'rgba(239,68,68,0.2)',
