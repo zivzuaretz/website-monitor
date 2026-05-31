@@ -1188,23 +1188,26 @@
         const tired   = [...sups].filter(s => s.league !== 'hungry').sort((a, b) => (b.stageAPoints || 0) - (a.stageAPoints || 0));
         const medals  = ['🥇','🥈','🥉'];
 
-        /* hungry row: medal name | pts | תיקים */
-        const rowS = `display:grid;grid-template-columns:20px 1fr auto auto;align-items:center;gap:6px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.05)`;
+        /* hungry rows — graduated size by rank */
+        const nameSizes  = ['1rem',   '0.9rem',  '0.83rem'];
+        const medalSizes = ['1.15rem','0.95rem', '0.85rem'];
+        const ptsSizes   = ['0.85rem','0.78rem', '0.73rem'];
         const hungryRows = (list) => list.map((s, i) =>
-          `<div style="${rowS}">` +
-            `<span style="font-size:0.85rem;line-height:1">${medals[i] || ''}</span>` +
-            `<span style="font-size:0.82rem;font-weight:700;color:#fff">${s.name}</span>` +
-            `<span style="font-size:0.75rem;color:var(--gold);white-space:nowrap">${s.stageAPoints || 0} נק׳</span>` +
-            `<span style="font-size:0.75rem;color:var(--muted);white-space:nowrap">${s.totalCases || 0} תיקים</span>` +
+          `<div style="display:grid;grid-template-columns:22px 1fr auto auto;align-items:center;gap:6px;padding:${i===0?'6px':'4px'} 0;border-bottom:1px solid rgba(255,255,255,0.05)">` +
+            `<span style="font-size:${medalSizes[i]||'0.8rem'};line-height:1">${medals[i] || ''}</span>` +
+            `<span style="font-size:${nameSizes[i]||'0.8rem'};font-weight:700;color:#fff">${s.name}</span>` +
+            `<span style="font-size:${ptsSizes[i]||'0.7rem'};color:var(--gold);white-space:nowrap">${s.stageAPoints || 0} נק׳</span>` +
+            `<span style="font-size:${ptsSizes[i]||'0.7rem'};color:var(--muted);white-space:nowrap">${s.totalCases || 0} תיקים</span>` +
           `</div>`
         ).join('');
 
-        /* tired row: names only */
-        const tiredRows = (list) => list.map(s =>
-          `<div style="padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.04)">` +
-            `<span style="font-size:0.82rem;font-weight:600;color:#cbd5e1">${s.name}</span>` +
-          `</div>`
-        ).join('');
+        /* tired: compact inline chips */
+        const tiredRows = (list) =>
+          `<div style="display:flex;flex-wrap:wrap;gap:4px 6px;margin-top:2px">` +
+            list.map(s =>
+              `<span style="font-size:0.78rem;color:#94a3b8;background:rgba(148,163,184,0.08);border:1px solid rgba(148,163,184,0.15);border-radius:999px;padding:2px 8px">${s.name}</span>`
+            ).join('') +
+          `</div>`;
 
         /* team totals — cumulative: stageA + stageB */
         const teamPts = {}, teamCases = {};
@@ -1212,12 +1215,12 @@
           teamPts[s.team]   = (teamPts[s.team]   || 0) + (s.stageAPoints || 0) + (s.points || 0);
           teamCases[s.team] = (teamCases[s.team] || 0) + (s.totalCases   || 0);
         }
-        const teamRowS = `display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;padding:4px 0`;
+        const teamRowS = `display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05)`;
         const teamRows = Object.entries(teamPts).map(([team, pts]) =>
           `<div style="${teamRowS}">` +
-            `<span style="font-size:0.8rem;font-weight:700;color:#fff">צוות ${team}</span>` +
-            `<span style="font-size:0.75rem;color:var(--gold)">${pts} נק׳</span>` +
-            `<span style="font-size:0.75rem;color:var(--muted)">${teamCases[team] || 0} תיקים</span>` +
+            `<span style="font-size:0.9rem;font-weight:700;color:#fff">צוות ${team}</span>` +
+            `<span style="font-size:0.88rem;font-weight:800;color:var(--gold)">${pts} נק׳</span>` +
+            `<span style="font-size:0.82rem;color:var(--muted)">${teamCases[team] || 0} תיקים</span>` +
           `</div>`
         ).join('');
 
