@@ -1043,11 +1043,12 @@
       body.appendChild(row);
     });
 
-    /* teams — use stageAPoints in phase 2 so historical totals are preserved */
     const teams = {};
     for (const s of data.supervisors) {
       if (!teams[s.team]) teams[s.team] = { pts: 0, members: [] };
-      teams[s.team].pts += phase === 2 ? (s.stageAPoints || 0) : (s.points || 0);
+      teams[s.team].pts += phase === 2
+        ? (s.no_prizes ? (s.points || 0) : (s.stageAPoints || 0) + (s.points || 0))
+        : (s.points || 0);
       teams[s.team].members.push(s.name);
     }
 
