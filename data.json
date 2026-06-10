@@ -1,15 +1,15 @@
 {
-  "refresh_date": "2026-06-09T15:52:55+03:00",
+  "refresh_date": "2026-06-10T10:04:05+03:00",
   "phase": 2,
   "group_target": 80,
-  "monthlyCases": { "april": 15, "may": 45, "june": 16 },
+  "monthlyCases": { "april": 15, "may": 45, "june": 18 },
   "team_managers": [
     { "name": "זיו זוארץ",    "role": "מנהלת צוות"   },
     { "name": "אורון בן חמו", "role": "מנהל מחלקה"  }
   ],
   "supervisors": [
     { "name": "זיו זוארץ",        "team": "זיו זוארץ",    "points": 19, "x2_count": 5, "league": "tired",  "rank_change": 0, "weekly_new": 14, "no_prizes": true,  "stageAPoints": 12, "totalCases": 14 },
-    { "name": "גל גבאי",          "team": "זיו זוארץ",    "points": 1, "x2_count": 0, "league": "hungry", "rank_change": 0, "weekly_new": 18, "no_prizes": false, "stageAPoints": 24, "totalCases": 18 },
+    { "name": "גל גבאי",          "team": "זיו זוארץ",    "points": 5, "x2_count": 2, "league": "hungry", "rank_change": 0, "weekly_new": 20, "no_prizes": false, "stageAPoints": 24, "totalCases": 20 },
     { "name": "עדי להב",           "team": "זיו זוארץ",    "points": 2, "x2_count": 1, "league": "tired",  "rank_change": 0, "weekly_new": 1, "no_prizes": false, "stageAPoints": 0,  "totalCases": 1  },
     { "name": "באנצ׳י בירוק",     "team": "זיו זוארץ",    "points": 9, "x2_count": 3, "league": "hungry", "rank_change": 0, "weekly_new": 19, "no_prizes": false, "stageAPoints": 20, "totalCases": 19 },
     { "name": "אופיר בגיזדה",     "team": "זיו זוארץ",    "points": 0, "x2_count": 0, "league": "tired",  "rank_change": 0, "weekly_new": 0, "no_prizes": false, "stageAPoints": 9,  "totalCases": 5  },
