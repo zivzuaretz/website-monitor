@@ -1,8 +1,8 @@
 {
-  "refresh_date": "2026-06-10T13:18:15+03:00",
+  "refresh_date": "2026-06-11T14:33:48+03:00",
   "phase": 2,
   "group_target": 80,
-  "monthlyCases": { "april": 15, "may": 45, "june": 19 },
+  "monthlyCases": { "april": 15, "may": 45, "june": 20 },
   "team_managers": [
     { "name": "זיו זוארץ",    "role": "מנהלת צוות"   },
     { "name": "אורון בן חמו", "role": "מנהל מחלקה"  }
@@ -16,7 +16,7 @@
     { "name": "נתיב לוגסי",        "team": "זיו זוארץ",    "points": 4, "x2_count": 0, "league": "tired",  "rank_change": 0, "weekly_new": 4, "no_prizes": true,  "stageAPoints": 4,  "totalCases": 4  },
     { "name": "אילן גמליאל",      "team": "אורון בן חמו", "points": 1, "x2_count": 0, "league": "hungry", "rank_change": 0, "weekly_new": 8, "no_prizes": false, "stageAPoints": 14, "totalCases": 8  },
     { "name": "חגי אביטן",        "team": "אורון בן חמו", "points": 4, "x2_count": 2, "league": "tired",  "rank_change": 0, "weekly_new": 3, "no_prizes": false, "stageAPoints": 2,  "totalCases": 3  },
-    { "name": "הילה לוי סוויסה",  "team": "אורון בן חמו", "points": 2, "x2_count": 1, "league": "tired",  "rank_change": 0, "weekly_new": 3, "no_prizes": false, "stageAPoints": 4,  "totalCases": 3  },
+    { "name": "הילה לוי סוויסה",  "team": "אורון בן חמו", "points": 4, "x2_count": 2, "league": "tired",  "rank_change": 0, "weekly_new": 4, "no_prizes": false, "stageAPoints": 4,  "totalCases": 4  },
     { "name": "ילנה דרוזדוב",      "team": "אורון בן חמו", "points": 2, "x2_count": 1, "league": "tired",  "rank_change": 0, "weekly_new": 2, "no_prizes": false, "stageAPoints": 2,  "totalCases": 2  }
   ],
   "sales": {
