@@ -1103,6 +1103,7 @@
 
   function renderSales(sales) {
     const el = document.getElementById('sales-card');
+    if (!el) return;
     if (!sales) { el.style.display = 'none'; return; }
 
     const byProduct = sales.by_product
