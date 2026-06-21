@@ -909,10 +909,11 @@
     document.getElementById('refresh-label').textContent = fmtDate(data.refresh_date);
 
     /* group progress */
-    const pct = clamp(Math.round(total / target * 100), 0, 100);
+    const rawPct = Math.round(total / target * 100);
+    const barPct = clamp(rawPct, 0, 100);
     document.getElementById('group-num').innerHTML = `${total} <small>/ ${target}</small>`;
-    document.getElementById('group-fill').style.width = pct + '%';
-    document.getElementById('group-pct').textContent = pct + '%';
+    document.getElementById('group-fill').style.width = barPct + '%';
+    document.getElementById('group-pct').textContent = rawPct + '%';
 
     /* phase pills + countdown */
     const PHASE_ENDS = {
