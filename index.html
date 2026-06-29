@@ -1209,30 +1209,6 @@
         launchConfetti();
 
         const allSups = _cachedData.supervisors;
-        const sups    = allSups.filter(s => !s.no_prizes);
-        const hungry  = [...sups].filter(s => s.league === 'hungry').sort((a, b) => (b.stageAPoints || 0) - (a.stageAPoints || 0));
-        const tired   = [...sups].filter(s => s.league !== 'hungry').sort((a, b) => (b.stageAPoints || 0) - (a.stageAPoints || 0));
-        const medals  = ['🥇','🥈','🥉'];
-
-        const hungryRows = (list) => list.map((s, i) => {
-          const isWinner = s.name === 'גל גבאי';
-          const badge = isWinner
-            ? `<div style="font-size:0.72rem;font-weight:700;color:var(--gold);margin-top:4px">זוכה ב-1000₪ BuyMe 💪🏽</div>`
-            : '';
-          return `<div style="text-align:center;padding:${isWinner?'8px':'5px'} 0;border-bottom:1px solid rgba(255,255,255,0.05)">` +
-            `<div style="font-size:0.85rem;font-weight:700;color:#fff">${medals[i] || ''} ${s.name}</div>` +
-            badge +
-            `<div style="font-size:0.75rem;color:var(--muted);margin-top:${isWinner?'6px':'3px'}">${s.stageAPoints || 0} נק׳ | ${s.totalCases || 0} תיקים</div>` +
-          `</div>`;
-        }).join('');
-
-        /* tired: compact inline chips, centered */
-        const tiredRows = (list) =>
-          `<div style="display:flex;flex-wrap:wrap;gap:4px 6px;margin-top:2px;justify-content:center">` +
-            list.map(s =>
-              `<span style="font-size:0.78rem;color:#94a3b8;background:rgba(148,163,184,0.08);border:1px solid rgba(148,163,184,0.15);border-radius:999px;padding:1px 7px">${s.name}</span>`
-            ).join('') +
-          `</div>`;
 
         /* team totals — cumulative: stageA + stageB */
         const teamPts = {}, teamCases = {};
@@ -1240,30 +1216,28 @@
           teamPts[s.team]   = (teamPts[s.team]   || 0) + (s.no_prizes ? (s.points || 0) : (s.stageAPoints || 0) + (s.points || 0));
           teamCases[s.team] = (teamCases[s.team] || 0) + (s.totalCases   || 0);
         }
-        const teamRowS = `display:flex;justify-content:center;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05)`;
-        const teamRows = Object.entries(teamPts).map(([team, pts]) =>
-          `<div style="${teamRowS}">` +
-            `<span style="font-size:0.9rem;font-weight:700;color:#fff">צוות ${team}</span>` +
-            `<span style="font-size:0.88rem;font-weight:800;color:var(--gold)">${pts} נק׳</span>` +
-            `<span style="font-size:0.82rem;color:var(--muted)">${teamCases[team] || 0} תיקים</span>` +
-          `</div>`
-        ).join('');
 
-        const sec = (bg, border, content) =>
-          `<div style="border-radius:10px;padding:10px 12px;margin-bottom:10px;background:${bg};border:1px solid ${border}">${content}</div>`;
+        const teamRows = Object.entries(teamPts).map(([team, pts]) => {
+          const imgSrc = supervisorImages[team];
+          const img = imgSrc ? `<img src="${imgSrc}" alt="${team}" style="width:52px;height:52px;border-radius:50%;object-fit:cover;border:2px solid var(--gold-bdr);background:var(--card2)" onerror="this.style.visibility='hidden'">` : '';
+          return `<div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;text-align:center">` +
+            img +
+            `<div style="font-size:0.88rem;font-weight:700;color:#fff">צוות ${team}</div>` +
+            `<div style="font-size:1.1rem;font-weight:800;color:var(--gold)">${pts} נק׳</div>` +
+            `<div style="font-size:0.78rem;color:var(--muted)">${teamCases[team] || 0} תיקים</div>` +
+          `</div>`;
+        }).join(`<div style="width:1px;background:rgba(255,255,255,0.08);align-self:stretch;margin:8px 0"></div>`);
+
         const hdr = (color, text) =>
-          `<div style="font-size:0.78rem;font-weight:700;color:${color};margin-bottom:6px;text-align:center">${text}</div>`;
+          `<div style="font-size:0.78rem;font-weight:700;color:${color};margin-bottom:10px;text-align:center">${text}</div>`;
 
         const titleEl = document.getElementById('modal-title');
         if (titleEl) { titleEl.style.flex = '1'; titleEl.style.textAlign = 'center'; }
 
         el.innerHTML =
-          sec('rgba(239,68,68,0.07)', 'rgba(239,68,68,0.2)',
-            hdr('#ef4444', '🏆 ליגת הרעבים') + hungryRows(hungry)) +
-          sec('rgba(148,163,184,0.05)', 'rgba(148,163,184,0.15)',
-            hdr('#94a3b8', '😴 ליגת העייפים') + tiredRows(tired)) +
-          `<div style="border-radius:10px;padding:10px 12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07)">` +
-            hdr('var(--muted)', '🏅 סיכום צוותי — כל תקופת התחרות') + teamRows +
+          `<div style="border-radius:10px;padding:16px 12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07)">` +
+            hdr('var(--muted)', '🏅 סיכום צוותי — כל תקופת התחרות') +
+            `<div style="display:flex;justify-content:center;gap:16px">${teamRows}</div>` +
           `</div>`;
       }
     }
