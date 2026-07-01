@@ -1089,7 +1089,7 @@
   function renderMonthlyCases(mc) {
     const el = document.getElementById('monthly-card');
     if (!el) return;
-    const months = [['אפריל', mc && mc.april != null ? mc.april : 0], ['מאי', mc && mc.may != null ? mc.may : 0], ['יוני', mc && mc.june != null ? mc.june : 0]];
+    const months = [['אפריל', mc && mc.april != null ? mc.april : 0], ['מאי', mc && mc.may != null ? mc.may : 0], ['יוני', mc && mc.june != null ? mc.june : 0], ['יולי', mc && mc.july != null ? mc.july : 0]];
     el.innerHTML =
       `<div style="display:flex;justify-content:space-around;text-align:center;gap:8px">` +
         months.map(([label, n]) =>
