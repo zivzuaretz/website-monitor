@@ -1,8 +1,8 @@
 {
-  "refresh_date": "2026-07-20T18:43:42+03:00",
+  "refresh_date": "2026-07-21T15:27:14+03:00",
   "phase": 2,
   "group_target": 80,
-  "monthlyCases": { "april": 15, "may": 45, "june": 42, "july": 25 },
+  "monthlyCases": { "april": 15, "may": 45, "june": 42, "july": 26 },
   "team_managers": [
     { "name": "זיו זוארץ",    "role": "מנהלת צוות"   },
     { "name": "אורון בן חמו", "role": "מנהל מחלקה"  }
@@ -12,7 +12,7 @@
     { "name": "גל גבאי",          "team": "זיו זוארץ",    "points": 30, "x2_count": 14, "league": "hungry", "rank_change": 0, "weekly_new": 33, "no_prizes": false, "stageAPoints": 24, "totalCases": 33 },
     { "name": "עדי להב",           "team": "זיו זוארץ",    "points": 12, "x2_count": 6, "league": "tired",  "rank_change": 0, "weekly_new": 6, "no_prizes": false, "stageAPoints": 0,  "totalCases": 6  },
     { "name": "באנצ׳י בירוק",     "team": "זיו זוארץ",    "points": 9, "x2_count": 3, "league": "hungry", "rank_change": 0, "weekly_new": 19, "no_prizes": false, "stageAPoints": 20, "totalCases": 19 },
-    { "name": "אופיר בגיזדה",     "team": "זיו זוארץ",    "points": 12, "x2_count": 6, "league": "tired",  "rank_change": 0, "weekly_new": 11, "no_prizes": false, "stageAPoints": 9,  "totalCases": 11  },
+    { "name": "אופיר בגיזדה",     "team": "זיו זוארץ",    "points": 14, "x2_count": 7, "league": "tired",  "rank_change": 0, "weekly_new": 12, "no_prizes": false, "stageAPoints": 9,  "totalCases": 12  },
     { "name": "נתיב לוגסי",        "team": "זיו זוארץ",    "points": 4, "x2_count": 0, "league": "tired",  "rank_change": 0, "weekly_new": 4, "no_prizes": true,  "stageAPoints": 4,  "totalCases": 4  },
     { "name": "אילן גמליאל",      "team": "אורון בן חמו", "points": 11, "x2_count": 5, "league": "hungry", "rank_change": 0, "weekly_new": 13, "no_prizes": false, "stageAPoints": 14, "totalCases": 13 },
     { "name": "חגי אביטן",        "team": "אורון בן חמו", "points": 4, "x2_count": 2, "league": "tired",  "rank_change": 0, "weekly_new": 3, "no_prizes": false, "stageAPoints": 2,  "totalCases": 3  },
