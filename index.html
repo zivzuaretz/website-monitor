@@ -641,12 +641,17 @@
       100% { text-shadow: 0 0 0 rgba(34,197,94,0); }
     }
     .cu-glow { animation: countUpFinish 0.25s ease-out forwards; }
+    @keyframes newsItemIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
     @media (prefers-reduced-motion: reduce) {
       .modal-bar { transition: none; }
       .modal-verdict { animation: none; opacity: 1; }
       .modal-leader-glow { animation: none; }
       .modal-close-btn  { animation: none; }
       .cu-glow { animation: none; }
+      .news-item { animation: none !important; opacity: 1 !important; }
     }
 
     /* ── RESPONSIVE ──────────────────────────── */
@@ -1199,6 +1204,68 @@
       })(t0);
     }
 
+    function buildWeeklyEvents(data) {
+      const events  = [];
+      const sups    = data.supervisors || [];
+      const comps   = sups.filter(s => !s.no_prizes);
+      const target  = data.group_target || 80;
+
+      /* team totals — same formula as team summary */
+      const tPts = {};
+      for (const s of sups)
+        tPts[s.team] = (tPts[s.team] || 0) + (s.no_prizes ? (s.points || 0) : (s.stageAPoints || 0) + (s.points || 0));
+      const tRank = Object.entries(tPts).sort((a, b) => b[1] - a[1]);
+
+      /* P1 — current hungry-league leader */
+      const hungry = comps.filter(s => s.league === 'hungry').sort((a, b) => (b.points || 0) - (a.points || 0));
+      if (hungry.length > 0) {
+        const l = hungry[0];
+        events.push({ pri: 1, text: `🥇 ${l.name} מוביל את ליגת הרעבים עם ${l.points} נקודות` });
+      }
+
+      /* P2 — biggest rank mover */
+      const risers = comps.filter(s => (s.rank_change || 0) > 0).sort((a, b) => b.rank_change - a.rank_change);
+      if (risers.length > 0) {
+        const r = risers[0];
+        events.push({ pri: 2, text: `📈 ${r.name} עלה ${r.rank_change} מקומות בדירוג` });
+      }
+
+      /* P3 — team lead gap */
+      if (tRank.length >= 2) {
+        const gap = tRank[0][1] - tRank[1][1];
+        events.push({ pri: 3, text: `👥 צוות ${tRank[0][0]} מוביל ב‑${gap} נקודות על צוות ${tRank[1][0]}` });
+      }
+
+      /* P4 — most recent month's tally */
+      const mc = data.monthlyCases || {};
+      const mOrder = [['יולי','july'],['יוני','june'],['מאי','may'],['אפריל','april']];
+      for (const [label, key] of mOrder) {
+        if (mc[key] != null && mc[key] > 0) {
+          events.push({ pri: 4, text: `📅 ב${label} נוספו ${mc[key]} תיקים חדשים` });
+          break;
+        }
+      }
+
+      /* P5 — group progress vs target */
+      const totalC = sups.reduce((s, x) => s + (x.totalCases || 0), 0);
+      if (totalC > 0) {
+        const pct = Math.round(totalC / target * 100);
+        events.push({ pri: 5, text: `📊 המבצע הגיע ל‑${totalC} תיקים — ${pct}% מהיעד הקבוצתי` });
+      }
+
+      /* P6 — how many above minimum */
+      const aboveMin = comps.filter(s => (s.totalCases || 0) >= MIN_TARGET).length;
+      if (aboveMin > 0)
+        events.push({ pri: 6, text: `🏅 ${aboveMin} מתוך ${comps.length} משתתפים עברו את רף ${MIN_TARGET} התיקים` });
+
+      /* P7 — top X2 scorer */
+      const topX2 = [...comps].sort((a, b) => (b.x2_count || 0) - (a.x2_count || 0))[0];
+      if (topX2 && (topX2.x2_count || 0) > 0)
+        events.push({ pri: 7, text: `⚡ ${topX2.name} עם ${topX2.x2_count} תיקים מסוכנים חדשים (X2)` });
+
+      return events.sort((a, b) => a.pri - b.pri).slice(0, 3);
+    }
+
     function renderModal() {
       const el = document.getElementById('modal-content');
       if (!el || !_cachedData) return;
@@ -1234,11 +1301,26 @@
         const titleEl = document.getElementById('modal-title');
         if (titleEl) { titleEl.style.flex = '1'; titleEl.style.textAlign = 'center'; }
 
+        /* weekly events */
+        const weekEvents = buildWeeklyEvents(_cachedData);
+        let newsHtml = '';
+        if (weekEvents.length > 0) {
+          const items = weekEvents.map((e, i) =>
+            `<div class="news-item" style="font-size:0.81rem;color:var(--text);line-height:1.6;padding:7px 0;${i < weekEvents.length - 1 ? 'border-bottom:1px solid rgba(255,255,255,0.06)' : ''};opacity:0;animation:newsItemIn 0.4s ease forwards;animation-delay:${0.25 + i * 0.13}s">${e.text}</div>`
+          ).join('');
+          newsHtml =
+            `<div style="margin-top:12px;border-radius:10px;padding:14px 12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07)">` +
+              hdr('var(--muted)', '📰 השבוע במבצע') +
+              items +
+            `</div>`;
+        }
+
         el.innerHTML =
           `<div style="border-radius:10px;padding:16px 12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07)">` +
             hdr('var(--muted)', '🏅 סיכום צוותי — כל תקופת התחרות') +
             `<div style="display:flex;justify-content:center;gap:16px">${teamRows}</div>` +
-          `</div>`;
+          `</div>` +
+          newsHtml;
       }
     }
 
