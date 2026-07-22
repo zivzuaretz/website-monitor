@@ -1317,6 +1317,21 @@
         const titleEl = document.getElementById('modal-title');
         if (titleEl) { titleEl.style.flex = '1'; titleEl.style.textAlign = 'center'; }
 
+        /* top 2 performers by weekly_new */
+        const top2 = [...allSups].sort((a, b) => (b.weekly_new || 0) - (a.weekly_new || 0)).slice(0, 2);
+        const top2Medals = ['🥇', '🥈'];
+        const top2Items = top2.map((s, i) =>
+          `<div class="news-item" style="font-size:0.82rem;color:var(--text);line-height:1.65;padding:7px 0;${i < top2.length - 1 ? 'border-bottom:1px solid rgba(255,255,255,0.06)' : ''};opacity:0;animation:newsItemIn 0.4s ease forwards;animation-delay:${0.15 + i * 0.14}s">` +
+            `${top2Medals[i]} <strong style="color:#fff">${s.name}</strong> — ${s.weekly_new || 0} תיקים <span style="color:var(--muted)">(מתוכם ${s.x2_count || 0} מסוכן חדש)</span>` +
+          `</div>`
+        ).join('');
+        const topHtml = top2.length > 0
+          ? `<div style="margin-top:12px;border-radius:10px;padding:14px 12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07)">` +
+              hdr('var(--muted)', '🏆 מובילי השבוע') +
+              top2Items +
+            `</div>`
+          : '';
+
         /* weekly events */
         const weekEvents = buildWeeklyEvents(_cachedData);
         let newsHtml = '';
@@ -1336,6 +1351,7 @@
             hdr('var(--muted)', '🏅 סיכום צוותי — כל תקופת התחרות') +
             `<div style="display:flex;justify-content:center;gap:16px">${teamRows}</div>` +
           `</div>` +
+          topHtml +
           newsHtml;
       }
     }
