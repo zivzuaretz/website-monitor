@@ -974,7 +974,23 @@
     /* split: managers (no_prizes) vs competitors */
     const managers     = sups.filter(s => s.no_prizes);
     const competitors  = sups.filter(s => !s.no_prizes);
-    const allRows      = [...competitors, ...managers];   // competitors first
+
+    /* merge הילה and נתיב into one display row (display-layer only) */
+    const MERGE_NAMES  = ['הילה לוי סוויסה', 'נתיב לוגסי'];
+    const mergeGroup   = managers.filter(s => MERGE_NAMES.includes(s.name));
+    const soloMgrs     = managers.filter(s => !MERGE_NAMES.includes(s.name));
+    const displayMgrs  = [
+      ...soloMgrs,
+      ...(mergeGroup.length > 0 ? [{
+        name:       'מפקחים כללי',
+        team:       null,
+        points:     mergeGroup.reduce((a, s) => a + (s.points     || 0), 0),
+        x2_count:   mergeGroup.reduce((a, s) => a + (s.x2_count   || 0), 0),
+        totalCases: mergeGroup.reduce((a, s) => a + (s.totalCases || 0), 0),
+        no_prizes:  true
+      }] : [])
+    ];
+    const allRows      = [...competitors, ...displayMgrs];   // competitors first
 
     allRows.forEach((s) => {
       const isManager = !!s.no_prizes;
@@ -1032,13 +1048,13 @@
           ${avatarImg(s.name)}
           <div>
             <div class="sup-name">${s.name}</div>
-            <div class="sup-team">צוות ${s.team}</div>
+            ${s.team ? `<div class="sup-team">צוות ${s.team}</div>` : ''}
           </div>
         </div>
         <span class="c-pts"><span class="pts-val">${pts}</span></span>
         <span class="c-chg" style="text-align:center;font-weight:700;color:#fff;font-size:0.9rem;line-height:1;display:block">${cases}</span>
         ${isManager
-          ? `<span style="font-size:0.7rem;color:var(--muted);font-style:italic">${{'זיו זוארץ':'לא משתתפת'}[s.name] || 'לא משתתף'}</span>`
+          ? `<span style="font-size:0.7rem;color:var(--muted);font-style:italic">${{'זיו זוארץ':'לא משתתפת','מפקחים כללי':'לא מתחרים'}[s.name] || 'לא משתתף'}</span>`
           : `<div class="min-wrap">
               <div class="min-track">
                 <div class="min-fill ${minPct < 100 ? 'warn' : ''}" style="width:${minPct}%"></div>
